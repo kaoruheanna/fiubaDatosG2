@@ -14,7 +14,7 @@ using namespace std;
 int main() {
 
 	LZ78 *lz78 = new LZ78();
-	string texto = "hola mundo";
+	string texto = "ababababc";
 
 	lz78->comprimir(texto);
 

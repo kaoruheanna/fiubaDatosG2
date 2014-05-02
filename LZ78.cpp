@@ -9,14 +9,16 @@
 
 
 LZ78::LZ78() {
-	this->lastCode = -1;
+	this->lastCode = 255;
 	map<string,int>::iterator mapIterator;
 
 	this->fileTabla.open("tabla.txt");
 	this->fileSalida.open("salida.txt");
+
 }
 
 LZ78::~LZ78() {
+	cout << "cierrro toodo";
 	this->fileTabla.close();
 	this->fileSalida.close();
 }
@@ -27,8 +29,20 @@ void LZ78::imprimirCadena(string cadena){
 	}
 }
 
-map<string,int>::iterator LZ78::getCodigoCadena(string cadena){
-	return this->table.find(cadena);
+void LZ78::imprimirCodigo(int codigo){
+	if(this->fileSalida.is_open()){
+		this->fileSalida << codigo << endl;
+	}
+}
+
+int LZ78::getCodigoCadena(string cadena){
+	if (cadena.length() == 1){
+		char caracter = cadena.at(0);
+		return (int)caracter;
+	}
+
+	map<string,int>::iterator iterador = this->table.find(cadena);
+	return (iterador != this->table.end()) ? (*iterador).second : -1;
 }
 
 bool LZ78::agregarCadenaATabla(string cadena){
@@ -43,10 +57,7 @@ bool LZ78::agregarCadenaATabla(string cadena){
 			this->fileTabla << cadena << "        " << codigo << endl;
 		}
 		this->lastCode = codigo;
-	} else {
-		cout << "ya existia el elemeto: " << cadena << endl;
 	}
-
 	return ret.second;
 }
 
@@ -62,48 +73,35 @@ int LZ78::comprimir(string &path){
 
 	while (textIterator != textoParaComprimir.end()){
 		charLeido = (*textIterator);
+		cout << "leo el caracter: " << charLeido << endl;
 		string nuevaCadena = leido+charLeido;
+		cout << "busco la cadena: " << nuevaCadena << endl;
+		int codigoGuardado = this->getCodigoCadena(nuevaCadena);
 
-		if (nuevaCadena.length() > 1){
-			cout << "entro al if con la nuevaCadena: " << nuevaCadena << endl;
-			map<string,int>::iterator cadenaGuardada = this->getCodigoCadena(nuevaCadena);
-
-
-			if (cadenaGuardada == this->table.end()){
-				this->imprimirCadena(leido);
-				this->agregarCadenaATabla(nuevaCadena);
-				leido = charLeido;
-			} else {
-				leido = nuevaCadena;
-			}
+		if (codigoGuardado == -1){
+			this->imprimirCodigo(codigoParaImprimir);
+			this->agregarCadenaATabla(nuevaCadena);
+			leido = "";
+			cout << "no la encuentro" << endl;
+			cout << "imprimo el codigo: " << codigoParaImprimir <<endl<<endl;
 		} else {
-			cout << "entro al else con la nuevaCadena: " << nuevaCadena << endl;
 			leido = nuevaCadena;
+			codigoParaImprimir = codigoGuardado;
+			cout << "la encuentro" << endl;
+			++textIterator;
+
+			if (textIterator == textoParaComprimir.end()){
+				this->imprimirCodigo(codigoParaImprimir);
+				cout << "como es fin de archivo imprimo el codigo " << codigoParaImprimir << endl;
+			}
 		}
 
-		++textIterator;
-		cout << leido << endl;
+
+
+
 	}
 
-//	while (it != path.end()){
-//
-//		if (leido.length() > 1){
-//			map<string,int>::iterator cadenaGuardada = this->getCodigoCadena(leido);
-//
-//			if (cadenaGuardada == this->table.end()){
-//				this->imprimirCadena(leido);
-//				this->agregarCadenaATabla(leido);
-//			} else {
-//				codigoParaImprimir = (*cadenaGuardada).second;
-//
-//
-//			}
-//		}
-//
-//	}
 
-
-//	cout << "Leido: " << leido << endl;
 	return 0;
 }
 

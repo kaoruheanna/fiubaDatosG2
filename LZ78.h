@@ -32,8 +32,9 @@ private:
 	ofstream fileSalida;
 
 	//seguramente dsp haya que cambiar esto por "cadenaDeBits"
-	map<string,int>::iterator getCodigoCadena(string cadena);
+	int getCodigoCadena(string cadena);
 	void imprimirCadena(string cadena);
+	void imprimirCodigo(int codigo);
 //	string getNextChar();
 //	string getCurrentChar();
 //	bool isEndOfString();
