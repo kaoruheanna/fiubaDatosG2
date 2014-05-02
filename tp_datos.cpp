@@ -8,9 +8,17 @@
 
 #include <iostream>
 #include <stdio.h>
+#include "LZ78.h"
 using namespace std;
 
 int main() {
-	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
+
+	LZ78 *lz78 = new LZ78();
+	string texto = "hola mundo";
+
+	lz78->comprimir(texto);
+
+//	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
+	delete lz78;
 	return 0;
 }
