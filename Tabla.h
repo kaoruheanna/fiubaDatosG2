@@ -9,11 +9,28 @@
 #define TABLA_H_
 
 #include "InterfazTabla.h"
+#include <vector>
 
-class Tabla : InterfazTabla{
+class Tabla : public InterfazTabla{
 public:
 	Tabla();
 	virtual ~Tabla();
+	// Metodos de InterfazTabla
+	virtual CadenaDeBits getBits(string cadena);
+	virtual string getString(CadenaDeBits bits);
+	virtual CadenaDeBits agregarString(string cadena);
+	virtual bool exists(string cadena);
+	virtual bool exists(CadenaDeBits bits);
+	virtual void limpiar();
+	virtual bool hayQueLimpiar();
+	virtual size_t getTamanioTabla();
+	void Imprimir(ostream& out);
+protected:
+	virtual void ImprimirEn(ostream& out) const;
+private:
+	int lastCode;
+	size_t bitsTabla;
+	vector<string>* tabla;
 };
 
 #endif /* TABLA_H_ */

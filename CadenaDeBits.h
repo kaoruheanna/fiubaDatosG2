@@ -19,11 +19,10 @@ public:
 	//compare(&CadenaDeBits otraCadena);
 	void serializar(void*);
 	void deserializar(void*);
+	int bits;
 
 protected:
 	virtual void ImprimirEn(ostream & out) const;
-private:
-	int bits;
 };
 
 #endif /* CADENADEBITS_H_ */

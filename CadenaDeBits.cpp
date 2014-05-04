@@ -9,7 +9,8 @@
 
 CadenaDeBits::CadenaDeBits(size_t tamanio, int bits) {
 	// TODO Auto-generated constructor stub
-
+	this->bits = bits;
+	this->tamanio = tamanio;
 }
 
 CadenaDeBits::~CadenaDeBits() {

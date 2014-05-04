@@ -12,13 +12,14 @@
 
 class InterfazTabla {
 	public:
-        virtual CadenaDeBits getBits(string cadena) const = 0;
-        virtual string getString(CadenaDeBits bits) const = 0;
-        virtual bool exists(string cadena) const = 0;
-        virtual bool exists(CadenaDeBits bits)const = 0;
-        virtual void limpiar() const = 0;
-        virtual bool hayQueLimpiar() const = 0;
-        virtual size_t getTamanioTabla() const = 0;
+        virtual CadenaDeBits getBits(string cadena) = 0;
+        virtual string getString(CadenaDeBits bits) = 0;
+        virtual CadenaDeBits agregarString(string cadena) = 0;
+        virtual bool exists(string cadena) = 0;
+        virtual bool exists(CadenaDeBits bits) = 0;
+        virtual void limpiar() = 0;
+        virtual bool hayQueLimpiar() = 0;
+        virtual size_t getTamanioTabla() = 0;
 
         virtual ~InterfazTabla(){};
 };
