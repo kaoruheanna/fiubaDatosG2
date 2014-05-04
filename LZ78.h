@@ -19,7 +19,7 @@ public:
 	LZ78();
 	virtual ~LZ78();
 	virtual int comprimir(string &path);
-	virtual int descomprimir(string path);
+	virtual int descomprimir(string &path);
 
 protected:
 	virtual void ImprimirEn(ostream & out) const;
@@ -28,13 +28,18 @@ protected:
 private:
 	map<string,int> table;
 	int lastCode;
+	int cantDeBits;
 	ofstream fileTabla;
 	ofstream fileSalida;
 
+	string completarCadena(string cadena);
 	//seguramente dsp haya que cambiar esto por "cadenaDeBits"
 	int getCodigoCadena(string cadena);
+	string getCadenaCodigo(int codigo);
 	void imprimirCadena(string cadena);
 	void imprimirCodigo(int codigo);
+	int getNextCodigo(string::iterator &iterador);
+	int binToInt(string codigoBinario);
 //	string getNextChar();
 //	string getCurrentChar();
 //	bool isEndOfString();
