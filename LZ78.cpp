@@ -133,6 +133,12 @@ int LZ78::comprimir(string &path){
 
 
 string LZ78::getCadenaCodigo(int codigo){
+	if (codigo < 256){
+			char caracter = (char)codigo;
+			string c = "";
+			c = c+caracter;
+			return c;
+		}
 	map<string,int>::iterator iterador = table.begin();
 	bool encontrado = false;
 	string cadena ="";
@@ -182,9 +188,6 @@ string LZ78::completarCadena(string cadena){
 
 int LZ78::descomprimir(string &path){
 	this->table.clear();
-	this->table.insert(pair<string,int>("a",97));
-	this->table.insert(pair<string,int>("b",98));
-	this->table.insert(pair<string,int>("c",99));
 
 	string codigoParaDescomprimir = path;
 	string::iterator codeIterator = codigoParaDescomprimir.begin();
