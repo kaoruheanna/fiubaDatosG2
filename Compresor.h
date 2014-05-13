@@ -22,7 +22,7 @@ class Compresor : public Imprimible{
         virtual int descomprimir(string &path) = 0;
 
     protected:
-        virtual bool agregarCadenaATabla(string cadena) = 0;
+        //virtual bool agregarCadenaATabla(string cadena) = 0;
 };
 
 #endif /* COMPRESOR_H_ */
