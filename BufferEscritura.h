@@ -12,10 +12,11 @@
 
 class BufferEscritura: public Buffer {
 public:
-	BufferEscritura(string archivo, size_t tamanio);
+	BufferEscritura(size_t tamanio);
 	virtual ~BufferEscritura();
 
 	void escribir(const CadenaDeBits* cadena);
+
 };
 
 #endif /* BUFFERESCRITURA_H_ */

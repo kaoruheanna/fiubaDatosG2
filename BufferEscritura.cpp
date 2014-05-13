@@ -9,11 +9,9 @@
 
 using namespace std;
 
-BufferEscritura::BufferEscritura(string archivo, size_t tamanio) : Buffer(archivo, tamanio){
-	// TODO Auto-generated constructor stub
+BufferEscritura::BufferEscritura(size_t tamanio) : Buffer(tamanio){
 }
 
 BufferEscritura::~BufferEscritura() {
-	// TODO Auto-generated destructor stub
 }
 

@@ -8,7 +8,7 @@
 #ifndef CONSTANTES_H_
 #define CONSTANTES_H_
 
-
+#define TAMANIO_BUFFER 16
 
 
 #endif /* CONSTANTES_H_ */

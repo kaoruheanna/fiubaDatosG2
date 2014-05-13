@@ -7,11 +7,43 @@
 
 #include "BufferLectura.h"
 
-BufferLectura::BufferLectura(string archivo, size_t tamanio) : Buffer(archivo, tamanio){
-	// TODO Auto-generated constructor stub
-}
+BufferLectura::BufferLectura(size_t tamanio) : Buffer(tamanio){}
 
 BufferLectura::~BufferLectura() {
-	// TODO Auto-generated destructor stub
+	cerrar();
 }
 
+void BufferLectura::actualizarBuffer(){
+	if(!_file->eof()){
+		_file->read(_buffer,tamanioBuffer);
+		_index += tamanioBuffer;
+	}
+}
+
+void BufferLectura::leer(CadenaDeBits* cadena){
+	cout << _buffer << endl;
+	actualizarBuffer();
+	/*
+	int * p = new int;
+	memcpy(p,_buffer,cadena->tamanio);
+	cadena->bits = *p;
+	delete[] p;*/
+}
+
+bool BufferLectura::esFinDeArchivo(){
+	return _file->eof();
+}
+
+void BufferLectura::crearStream(string fileName){
+	_file = new ifstream();
+	_file->open(fileName.data(), ifstream::binary);
+	actualizarBuffer();
+}
+
+void BufferLectura::cerrar(){
+	_file->close();
+}
+
+void BufferLectura::ImprimirEn(ostream& out) const{
+	out << "Buffer Tamanio: " << tamanioBuffer << endl;
+}

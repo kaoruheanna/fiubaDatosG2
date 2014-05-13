@@ -12,11 +12,20 @@
 
 class BufferLectura : public Buffer {
 public:
-	BufferLectura(string archivo, size_t tamanio);
+	BufferLectura(size_t tamanio);
 	virtual ~BufferLectura();
 
 	void leer(CadenaDeBits* cadena);
 	bool esFinDeArchivo();
+
+	virtual void crearStream(string archivo);
+	virtual void cerrar();
+
+	virtual void ImprimirEn(ostream& out) const;
+private:
+	ifstream* _file;
+
+	void actualizarBuffer();
 };
 
 #endif /* BUFFERLECTURA_H_ */

@@ -9,12 +9,12 @@
 
 using namespace std;
 
-Buffer::Buffer(string archivo, size_t tamanio){
-	// TODO Auto-generated constructor stub
-
+Buffer::Buffer(size_t tamanio): tamanioBuffer(tamanio) {
+	_buffer = new char [tamanio];
+	_index = 0;
 }
 
 Buffer::~Buffer() {
-	// TODO Auto-generated destructor stub
+	delete[] _buffer;
 }
 

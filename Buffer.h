@@ -9,8 +9,12 @@
 #define BUFFER_H_
 
 #include <iostream>
-
+#include <fstream>
+#include <iostream>
 #include <string>
+#include <stdio.h>
+#include <cstring>
+#include <stdlib.h>     /* malloc, free, rand */
 #include "Imprimible.h"
 #include "CadenaDeBits.h"
 
@@ -18,14 +22,17 @@ using namespace std;
 
 class Buffer : public Imprimible{
 public:
-	Buffer(string archivo, size_t tamanio);
+	Buffer(size_t tamanio);
 	virtual ~Buffer();
 
 	size_t tamanioBuffer;
 	iostream* file;
 
-	virtual bool crearStream(string archivo) const = 0;
-	virtual void cerrar() const = 0;
+	virtual void crearStream(string archivo) = 0;
+	virtual void cerrar() = 0;
+protected:
+	char* _buffer;
+	size_t _index;
 };
 
 #endif /* BUFFER_H_ */
