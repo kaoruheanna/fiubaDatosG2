@@ -8,6 +8,7 @@
 #ifndef CONSTANTES_H_
 #define CONSTANTES_H_
 
+//El tamanio del buffer expresado en bytes
 #define TAMANIO_BUFFER 16
 
 

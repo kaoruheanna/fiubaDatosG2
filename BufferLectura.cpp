@@ -16,7 +16,6 @@ BufferLectura::~BufferLectura() {
 void BufferLectura::actualizarBuffer(){
 	if(!_file->eof()){
 		_file->read(_buffer,tamanioBuffer);
-		_index += tamanioBuffer;
 	}
 }
 
