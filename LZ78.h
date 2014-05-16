@@ -9,6 +9,8 @@
 #define LZ78_H_
 
 #include "Compresor.h"
+#include "Tabla.h"
+#include "CadenaDeBits.h"
 #include <map>
 #include <iostream>
 #include <fstream>
@@ -23,21 +25,22 @@ public:
 
 protected:
 	virtual void ImprimirEn(ostream & out) const;
-	virtual bool agregarCadenaATabla(string cadena);
+	//virtual bool agregarCadenaATabla(string cadena);
 
 private:
-	map<string,int> table;
-	int lastCode;
-	int cantDeBits;
+	Tabla tabla;
+	//int lastCode;
+	//int cantDeBits;
 	ofstream fileTabla;
 	ofstream fileSalida;
 
 	string completarCadena(string cadena);
-	//seguramente dsp haya que cambiar esto por "cadenaDeBits"
-	int getCodigoCadena(string cadena);
-	string getCadenaCodigo(int codigo);
+	void cargarTabla();
+	//int getCodigoCadena(string cadena);
+	//string getCadenaCodigo(int codigo);
 	void imprimirCadena(string cadena);
 	void imprimirCodigo(int codigo);
+	void imprimirTabla(string cadena);
 	int getNextCodigo(string::iterator &iterador);
 	int binToInt(string codigoBinario);
 //	string getNextChar();
