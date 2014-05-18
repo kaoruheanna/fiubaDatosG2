@@ -23,7 +23,7 @@ int main() {
 	int i = 0;
 	while(!buffer->esFinDeArchivo()){
 		cout << "Iteracion " << i << endl;
-		CadenaDeBits *cadenaDeBits= new CadenaDeBits(9,0);
+		CadenaDeBits *cadenaDeBits= new CadenaDeBits(23,0);
 		buffer->leer(cadenaDeBits);
 		cout << cadenaDeBits->bits << endl;
 		delete cadenaDeBits;

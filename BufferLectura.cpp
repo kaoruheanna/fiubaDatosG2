@@ -32,7 +32,9 @@ void BufferLectura::leer(CadenaDeBits* cadena){
 	short bytesFaltantes = (bitsFaltantes > 0) ? ceil(bitsFaltantes/TAMANIO_BYTE) : 0;
 
 	cout << "bitsfaltantes"<<bitsFaltantes <<  " bitsrestantes " << bitsRestantesEnBuffer << " bytesFaltantes" << bytesFaltantes << "Tamanio " << cadena->tamanio << " chars " << tamanioEnBytes << endl;
+
 	char* aux = new char [tamanioEnBytes];
+
 	memcpy(aux,_buffer+(_index/TAMANIO_BYTE),tamanioEnBytes-bytesFaltantes);
 	_index += cadena->tamanio;
 	if(bytesFaltantes > 0){

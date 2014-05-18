@@ -37,13 +37,17 @@ void CadenaDeBits::serializar(void* output, short index) const{
 void CadenaDeBits::deserializar(void* input, short index){
 	char *inputString = (char*)input;
 
-	//unsigned long aux = ntohs(*reinterpret_cast<unsigned long*>(inputString));
 	unsigned long aux = 0;
-	memcpy(&aux, input, this->tamanioEnBytes(index));
+
+	for(unsigned int i = 0 ; i<this->tamanioEnBytes(index) ; i++){
+		memcpy(&aux, &inputString[i], 1);
+		aux <<= 8;
+	}
+	aux >>= 8;
 
 	short offset = (sizeof(long)-this->tamanioEnBytes(index))*TAMANIO_BYTE;
 	short shift = (this->tamanioEnBytes(index) * TAMANIO_BYTE) - this->tamanio;
-	cout << "aux antes " << aux << endl;
+	cout << "aux antes " << aux  << "char pos 0 " << inputString[0] << endl;
 
 	aux <<= offset + index;
 	aux >>= offset;
