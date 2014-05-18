@@ -18,6 +18,7 @@
 #include "Imprimible.h"
 #include "CadenaDeBits.h"
 #include "Constantes.h"
+#include <cmath>
 
 using namespace std;
 

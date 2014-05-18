@@ -17,6 +17,15 @@ public:
 
 	void escribir(const CadenaDeBits* cadena);
 
+	virtual void crearStream(string archivo);
+	virtual void cerrar();
+
+	virtual void ImprimirEn(ostream& out) const;
+private:
+	ofstream* _file;
+
+	void agregarFinDeArchivo();
+	void guardarEnDisco();
 };
 
 #endif /* BUFFERESCRITURA_H_ */

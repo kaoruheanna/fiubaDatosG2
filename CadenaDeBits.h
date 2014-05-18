@@ -17,9 +17,10 @@ public:
 	size_t tamanio;
 	bool esUno();
 	//compare(&CadenaDeBits otraCadena);
-	void serializar(void* output, short index);
+	void serializar(void* output, short index) const;
 	void deserializar(void* input, short index);
-	size_t tamanioEnBytes(short index);
+	size_t  tamanioEnBytes(short index) const;
+	char getAsChar() const;
 
 	unsigned int bits;
 
