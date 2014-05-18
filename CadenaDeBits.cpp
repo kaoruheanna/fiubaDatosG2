@@ -61,6 +61,9 @@ size_t CadenaDeBits::tamanioEnBytes(short index) const{
 	return ceil(aux/TAMANIO_BYTE);
 }
 
+char CadenaDeBits::getAsChar() const{
+	return (char)this->bits;
+}
 void CadenaDeBits::ImprimirEn(ostream & out) const{
 	out << "Cadena de Bits";
 }
