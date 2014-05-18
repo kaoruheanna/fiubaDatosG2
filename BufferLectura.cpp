@@ -25,8 +25,8 @@ void BufferLectura::actualizarBuffer(){
 
 void BufferLectura::leer(CadenaDeBits* cadena){
 	cout << _buffer << endl;
-
 	cout << "ingreso con index " << (_index/TAMANIO_BYTE) << endl;
+
 	short indexOnChar = _index % TAMANIO_BYTE;
 	short bitsRestantesEnBuffer = this->bitsRestantesEnBuffer();
 	size_t tamanioEnBytes = cadena->tamanioEnBytes(indexOnChar);
@@ -36,16 +36,16 @@ void BufferLectura::leer(CadenaDeBits* cadena){
 	cout << "bitsfaltantes"<<bitsFaltantes <<  " bitsrestantes " << bitsRestantesEnBuffer << " bytesFaltantes" << bytesFaltantes << "Tamanio " << cadena->tamanio << " chars " << tamanioEnBytes << endl;
 	char* aux = new char [tamanioEnBytes];
 	memcpy(aux,_buffer+(_index/TAMANIO_BYTE),tamanioEnBytes-bytesFaltantes);
-
+	_index += cadena->tamanio;
 	if(bytesFaltantes > 0){
 		actualizarBuffer();
 		memcpy(aux+(tamanioEnBytes-bytesFaltantes),_buffer,bytesFaltantes);
+		_index += cadena->tamanio-bitsRestantesEnBuffer;
 	}
 
 	cadena->deserializar(aux,indexOnChar);
 	delete[] aux;
 
-	_index += (bytesFaltantes > 0) ? cadena->tamanio-bitsRestantesEnBuffer : cadena->tamanio;
 	cout << "index " << _index << " tamanio current buffer " << _tamanioCurrentBuffer << endl;
 
 	if((_index >= (_tamanioCurrentBuffer*TAMANIO_BYTE)) && !(bytesFaltantes > 0)){
@@ -55,7 +55,7 @@ void BufferLectura::leer(CadenaDeBits* cadena){
 }
 
 bool BufferLectura::esFinDeArchivo(){
-	return _file->eof() && (_index>=(_tamanioCurrentBuffer*8));
+	return _file->eof() && (_index>=(_tamanioCurrentBuffer*TAMANIO_BYTE));
 }
 
 void BufferLectura::crearStream(string fileName){
