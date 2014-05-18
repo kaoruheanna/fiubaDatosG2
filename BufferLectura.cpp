@@ -6,13 +6,11 @@
  */
 
 #include "BufferLectura.h"
-#include "Constantes.h"
-#include <cmath>
 
 BufferLectura::BufferLectura(size_t tamanio) : Buffer(tamanio){}
 
 BufferLectura::~BufferLectura() {
-	cerrar();
+	this->cerrar();
 }
 
 void BufferLectura::actualizarBuffer(){
@@ -69,5 +67,5 @@ void BufferLectura::cerrar(){
 }
 
 void BufferLectura::ImprimirEn(ostream& out) const{
-	out << "Buffer Tamanio: " << tamanioBuffer << endl;
+	out << "Buffer Lectura Tamanio: " << tamanioBuffer << endl;
 }
