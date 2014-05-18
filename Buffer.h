@@ -17,6 +17,7 @@
 #include <stdlib.h>     /* malloc, free, rand */
 #include "Imprimible.h"
 #include "CadenaDeBits.h"
+#include "Constantes.h"
 
 using namespace std;
 
@@ -33,6 +34,9 @@ public:
 protected:
 	char* _buffer;
 	size_t _index;
+	size_t _tamanioCurrentBuffer;
+
+	short bitsRestantesEnBuffer();
 };
 
 #endif /* BUFFER_H_ */

@@ -20,11 +20,15 @@ int main() {
 
 	BufferLectura *buffer = new BufferLectura(TAMANIO_BUFFER);
 	buffer->crearStream("entrada.txt");
+	int i = 0;
 	while(!buffer->esFinDeArchivo()){
-		CadenaDeBits *cadenaDeBits= new CadenaDeBits(8,0);
+		cout << "Iteracion " << i << endl;
+		CadenaDeBits *cadenaDeBits= new CadenaDeBits(9,0);
 		buffer->leer(cadenaDeBits);
-		cout << cadenaDeBits << endl;
+		cout << cadenaDeBits->bits << endl;
 		delete cadenaDeBits;
+
+		i++;
 	}
 
 
@@ -33,11 +37,8 @@ int main() {
 	string texto2 = "abcababa";
 	string textoComprimido = "001100001001100010100000000100000010001100010001100011";
 	string textoComprimido2 = "001100001001100010001100011100000000100000011";
-	lz78->comprimir(texto2);
+	//lz78->comprimir(texto2);
 	//lz78->descomprimir(textoComprimido);
-	delete lz78;
-	
-//	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
 	delete lz78;
 
 	 //Pruebas de Tabla

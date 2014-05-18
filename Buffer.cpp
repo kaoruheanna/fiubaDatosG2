@@ -18,3 +18,7 @@ Buffer::~Buffer() {
 	delete[] _buffer;
 }
 
+short Buffer::bitsRestantesEnBuffer(){
+	return (_tamanioCurrentBuffer*TAMANIO_BYTE) - _index;
+}
+
