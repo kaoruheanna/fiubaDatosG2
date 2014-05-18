@@ -6,17 +6,14 @@
  */
 
 #include "LZ78.h"
-
+#include "BufferLectura.h"
 
 LZ78::LZ78() {
-//	this->lastCode = 255;
-//	this->cantDeBits = 9;
 	this->fileTabla.open("tabla.txt");
 	this->fileSalida.open("salida.txt");
 }
 
 LZ78::~LZ78() {
-	cout << "cierrro toodo";
 	this->fileTabla.close();
 	this->fileSalida.close();
 }
@@ -65,21 +62,25 @@ void LZ78::imprimirTabla(string cadena){
 //	return ret.second;
 //}
 
-int LZ78::comprimir(string &path){
+int LZ78::comprimir(string path){
+	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER);
+	bufferLectura->crearStream(path);
 	this->cargarTabla();
-	string textoParaComprimir = path;
 
 	string textoComprimido = "";
 	string leido = "";
 	string charLeido;
 	int codigoParaImprimir;
-	CadenaDeBits *codigoGuardado = new CadenaDeBits(0,0);
+	CadenaDeBits *codigoGuardado;
+	CadenaDeBits *cadenaLeida = new CadenaDeBits();
 
-	string::iterator textIterator = textoParaComprimir.begin();
-
-	while (textIterator != textoParaComprimir.end()){
-		charLeido = (*textIterator);
+	if (!bufferLectura->esFinDeArchivo()){
+		bufferLectura->leer(cadenaLeida);
+		charLeido = cadenaLeida->getChar();
 		cout << "leo el caracter: " << charLeido << endl;
+	}
+
+	while (!bufferLectura->esFinDeArchivo()){
 		string nuevaCadena = leido+charLeido;
 		cout << "busco la cadena: " << nuevaCadena << endl;
 
@@ -91,11 +92,12 @@ int LZ78::comprimir(string &path){
 			cout << "no la encuentro" << endl;
 			cout << "imprimo el codigo: " << codigoParaImprimir <<endl<<endl;
 		} else {
-			*codigoGuardado = this->tabla.getBits(nuevaCadena);
+			codigoGuardado delete;
+			codigoGuardado = &(this->tabla.getBits(nuevaCadena));
 			leido = nuevaCadena;
 			codigoParaImprimir = codigoGuardado->bits;
 			cout << "la encuentro" << endl;
-			++textIterator;
+			bufferLectura->leer(cadenaLeida);
 
 			if (textIterator == textoParaComprimir.end()){
 				this->imprimirCodigo(codigoParaImprimir);
@@ -104,6 +106,8 @@ int LZ78::comprimir(string &path){
 		}
 	}
 delete codigoGuardado;
+delete bufferLectura;
+delete cadenaLeida;
 return 0;
 }
 
@@ -176,12 +180,13 @@ int  LZ78::binToInt(string codigoBinario){
 	string::iterator textIterator = codigoBinario.end();
 	textIterator--;
 	int result = 0;
+	float dos = 2;
 	string charLeido;
 	int tamanio = codigoBinario.size();
 	for(int i=0;i<tamanio;i++){
 		charLeido = (*textIterator);
 		if (charLeido == "1"){
-			result = result + (pow(2,i));
+			result = result + (pow(dos,i));
 		}
 	textIterator--;
 	}
