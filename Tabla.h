@@ -25,6 +25,7 @@ public:
 	virtual void limpiar();
 	virtual bool hayQueLimpiar();
 	virtual size_t getTamanioTabla();
+	int getLastCode();
 	void Imprimir(ostream& out);
 protected:
 	virtual void ImprimirEn(ostream& out) const;

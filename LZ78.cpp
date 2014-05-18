@@ -20,7 +20,8 @@ LZ78::~LZ78() {
 
 void LZ78::imprimirCadena(string cadena){
 	if(this->fileSalida.is_open()){
-		this->fileSalida << cadena << endl;
+		cout << "Imprime cadena: " << cadena << endl << endl;
+		this->fileSalida << cadena;
 	}
 }
 
@@ -112,38 +113,6 @@ int LZ78::comprimir(string path){
 	return 0;
 }
 
-
-
-int LZ78::getNextCodigo(string::iterator &codeIterator){
-	string charLeido;
-	string codigoLeido = "";
-	int cantDeBits = 9; //ojo con esto
-	for(int i=0;i<cantDeBits;i++){
-			charLeido = (*codeIterator);
-			codigoLeido = codigoLeido + charLeido;
-			++codeIterator;
-		}
-	int codigoInt = this->binToInt(codigoLeido);
-	return codigoInt;
-}
-
-int  LZ78::binToInt(string codigoBinario){
-	string::iterator textIterator = codigoBinario.end();
-	textIterator--;
-	int result = 0;
-	float dos = 2;
-	string charLeido;
-	int tamanio = codigoBinario.size();
-	for(int i=0;i<tamanio;i++){
-		charLeido = (*textIterator);
-		if (charLeido == "1"){
-			result = result + (pow(dos,i));
-		}
-	textIterator--;
-	}
-		return result;
-}
-
 string LZ78::completarCadena(string cadena){
 	string::iterator textIterator = cadena.begin();
 	cadena = cadena + (*textIterator);
@@ -162,80 +131,87 @@ void LZ78::cargarTabla(){
 	}
 }
 
-int LZ78::descomprimir(string &path){
+int LZ78::descomprimir(string path){
+	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER);
+	bufferLectura->crearStream(path);
 	this->cargarTabla();
-	int ultimoCodigo = 255;
 
-	string codigoParaDescomprimir = path;
-	string::iterator codeIterator = codigoParaDescomprimir.begin();
+	CadenaDeBits *codigoParaDescomprimir = new CadenaDeBits();
 
-	string cadenaSinTerminar;
+	string stringSinTerminar = "";
 	int codigoSinTerminar;
 
-	string cadenaTerminada;
-	int codigoTerminado;
-
-	string nuevaCadena;
+	string stringTerminado;
+//	int codigoTerminado;
+	size_t cuantosLeer;
+	string nuevoString;
 	CadenaDeBits *nuevoCodigo = new CadenaDeBits(0,0);
 
-	CadenaDeBits *primerCodigo = new CadenaDeBits(0,0);
-	primerCodigo->bits = this->getNextCodigo(codeIterator);
-	string primerCaracter = this->tabla.getString(*primerCodigo);
-	this->imprimirCadena(primerCaracter);
+	if (!bufferLectura->esFinDeArchivo()){
+		cuantosLeer = this->tabla.getTamanioTabla();
+		cout << "Cant bits tabla: " << cuantosLeer << endl;
+		nuevoCodigo->tamanio = cuantosLeer;
+		bufferLectura->leer(nuevoCodigo);
 
-	cout << "Primer código leído: " << primerCodigo->bits << endl;
-	cout << "Imprime caracter: " << primerCaracter << endl;
-	cout << "" << endl;
+		string primerCaracter = this->tabla.getString(*nuevoCodigo);
+		this->imprimirCadena(primerCaracter);
 
-	cadenaSinTerminar = primerCaracter;
-	cout << "Cadena a agregar: " << cadenaSinTerminar << ", mas algo ";
-	codigoSinTerminar = ultimoCodigo+1 ;
-	cout << "en el código: " << codigoSinTerminar <<endl;
+		cout << "Primer código leído: " << nuevoCodigo->bits << endl;
+//		cout << "Imprime caracter: " << primerCaracter << endl;
+//		cout << "" << endl;
 
-	while (codeIterator != codigoParaDescomprimir.end()){
-		nuevoCodigo->bits = this->getNextCodigo(codeIterator);
-		cout << "Siguiente código leído: " << nuevoCodigo->bits << endl;
-		if (nuevoCodigo->bits == codigoSinTerminar){
+		stringSinTerminar = primerCaracter;
+		cout << "Cadena a agregar: " << stringSinTerminar << ", mas algo ";
+//		codigoSinTerminar = (this->tabla.getLastCode())+1;
+//		cout << "en el código: " << codigoSinTerminar <<endl;
+	}
+
+	while (!bufferLectura->esFinDeArchivo()){
+		cuantosLeer = this->tabla.getTamanioTabla();
+		cout << "Cant bits tabla: " << cuantosLeer << endl;
+		nuevoCodigo->tamanio = cuantosLeer;
+		bufferLectura->leer(nuevoCodigo);
+		cout << "código leído: " << nuevoCodigo->bits << endl;
+
+		//si el codigo que leo es el que todavia no termine de dar de alta
+		if (nuevoCodigo->bits == ((this->tabla.getLastCode())+1)){
 			cout << "Es una cadena que no está completa" << endl;
-			cadenaTerminada = this->completarCadena(cadenaSinTerminar);
-			cout << "Imprime cadena: " << cadenaTerminada;
-			cout << "" << endl;
-			this->imprimirCadena(cadenaTerminada);
-			codigoTerminado = codigoSinTerminar;
+			stringTerminado = this->completarCadena(stringSinTerminar);
 
-			this->tabla.agregarString(cadenaTerminada);
-			this->imprimirTabla(cadenaTerminada);
+			this->imprimirCadena(stringTerminado);
+//			codigoTerminado = codigoSinTerminar;
 
-			cout << "Agrego a la tabla: " << cadenaTerminada;
-			cout << " con el código: " << codigoTerminado <<endl;
+			this->tabla.agregarString(stringTerminado);
+//			this->imprimirTabla(stringTerminado);
 
-			cadenaSinTerminar = cadenaTerminada;
-			cout << "Cadena a agregar: " << cadenaSinTerminar << ", mas algo ";
-			codigoSinTerminar = ++codigoTerminado;
-			cout << "en el código: " << codigoSinTerminar<<endl;
-		}
-		else{
-			nuevaCadena = this->tabla.getString(*nuevoCodigo);
-			cout << "Imprime caracter/cadena: " << nuevaCadena << endl;
-			cout << "" << endl;
-			this->imprimirCadena(nuevaCadena);
-			cadenaTerminada = cadenaSinTerminar + nuevaCadena[0];
-			cout << "Agrego a la tabla: " << cadenaTerminada;
-			codigoTerminado = codigoSinTerminar;
-			cout << " con el código: " << codigoTerminado << endl;
+//			cout << "Agrego a la tabla: " << stringTerminado;
+//			cout << " con el código: " << codigoTerminado <<endl;
 
-			this->tabla.agregarString(cadenaTerminada);
-			this->imprimirTabla(cadenaTerminada);
+			stringSinTerminar = stringTerminado;
+//			cout << "Cadena a agregar: " << stringSinTerminar << ", mas algo ";
+//			codigoSinTerminar = ++codigoTerminado;
+//			cout << "en el código: " << codigoSinTerminar<<endl;
+		} else {
+			nuevoString = this->tabla.getString(*nuevoCodigo);
+			this->imprimirCadena(nuevoString);
+			stringTerminado = stringSinTerminar + nuevoString[0];
+			cout << "Agrego a la tabla: " << stringTerminado;
+//			codigoTerminado = codigoSinTerminar;
+//			cout << " con el código: " << codigoTerminado << endl;
 
-			cadenaSinTerminar = nuevaCadena;
-			cout << "Cadena a agregar: " << cadenaSinTerminar << ", mas algo ";
-			codigoSinTerminar = ++codigoTerminado;
-			cout << "en el código: " << codigoSinTerminar <<endl;
+			this->tabla.agregarString(stringTerminado);
+//			this->imprimirTabla(stringTerminado);
+
+			stringSinTerminar = nuevoString;
+			cout << "Cadena a agregar: " << stringSinTerminar << ", mas algo ";
+//			codigoSinTerminar = ++codigoTerminado;
+//			cout << "en el código: " << codigoSinTerminar <<endl;
 		}
 	}
-delete primerCodigo;
-delete nuevoCodigo;
-return 0;
+	delete nuevoCodigo;
+	delete bufferLectura;
+	delete codigoParaDescomprimir;
+	return 0;
 }
 
 void LZ78::ImprimirEn(ostream & out) const{

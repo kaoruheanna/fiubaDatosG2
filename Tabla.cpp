@@ -53,6 +53,11 @@ string Tabla::getString(CadenaDeBits bits){
 	}
 	return "";
 }
+
+int Tabla::getLastCode(){
+	return this->lastCode;
+}
+
 bool Tabla::exists(string cadena){
 	bool encontrado = false;
 	unsigned int currentIndex = 0;
@@ -72,7 +77,7 @@ bool Tabla::hayQueLimpiar(){
 	return false;
 }
 size_t Tabla::getTamanioTabla(){
-	return (this->bitsTabla * 2);
+	return this->bitsTabla;
 }
 void Tabla::Imprimir(ostream& out){
 	this->ImprimirEn(out);
