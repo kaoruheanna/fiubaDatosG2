@@ -28,9 +28,9 @@ void BufferLectura::leer(CadenaDeBits* cadena){
 	cout << "ingreso con index " << (_index/TAMANIO_BYTE) << endl;
 
 	short indexOnChar = _index % TAMANIO_BYTE;
-	short bitsRestantesEnBuffer = this->bitsRestantesEnBuffer();
+	float bitsRestantesEnBuffer = (float)this->bitsRestantesEnBuffer();
 	size_t tamanioEnBytes = cadena->tamanioEnBytes(indexOnChar);
-	float bitsFaltantes =  (float)-(bitsRestantesEnBuffer - cadena->tamanio);
+	float bitsFaltantes =  -(bitsRestantesEnBuffer - cadena->tamanio);
 	short bytesFaltantes = (bitsFaltantes > 0) ? ceil(bitsFaltantes/TAMANIO_BYTE) : 0;
 
 	cout << "bitsfaltantes"<<bitsFaltantes <<  " bitsrestantes " << bitsRestantesEnBuffer << " bytesFaltantes" << bytesFaltantes << "Tamanio " << cadena->tamanio << " chars " << tamanioEnBytes << endl;
