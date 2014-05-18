@@ -25,15 +25,28 @@ CadenaDeBits Tabla::agregarString(string cadena){
 	}
 	return toReturn;
 }
-CadenaDeBits Tabla::getBits(string cadena){
+//CadenaDeBits Tabla::getBits(string cadena){
+//	bool encontrado = false;
+//	unsigned int currentIndex = 0;
+//	while((!encontrado) && (currentIndex < this->tabla->size())){
+//		encontrado = (cadena.compare(this->tabla->at(currentIndex)) == 0);
+//		currentIndex ++;
+//	}
+//	return (*new CadenaDeBits(this->bitsTabla, currentIndex - 1));
+//}
+
+void Tabla::getBits(string cadena,CadenaDeBits* cadenaDeBits){
 	bool encontrado = false;
 	unsigned int currentIndex = 0;
 	while((!encontrado) && (currentIndex < this->tabla->size())){
 		encontrado = (cadena.compare(this->tabla->at(currentIndex)) == 0);
 		currentIndex ++;
 	}
-	return (*new CadenaDeBits(this->bitsTabla, currentIndex - 1));
+	cadenaDeBits->tamanio = this->bitsTabla;
+	cadenaDeBits->bits = currentIndex - 1;
 }
+
+
 string Tabla::getString(CadenaDeBits bits){
 	if(Tabla::exists(bits)){
 		return this->tabla->at(bits.bits);

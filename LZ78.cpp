@@ -31,10 +31,10 @@ void LZ78::imprimirCodigo(int codigo){
 }
 
 void LZ78::imprimirTabla(string cadena){
-	if (this->fileTabla.is_open()){
-		int codigo = this->tabla.getBits(cadena).bits;
-		this->fileTabla << cadena << "  " << codigo << endl;
-	}
+//	if (this->fileTabla.is_open()){
+//		int codigo = this->tabla.getBits(cadena).bits;
+//		this->fileTabla << cadena << "  " << codigo << endl;
+//	}
 }
 
 //int LZ78::getCodigoCadena(string cadena){
@@ -68,100 +68,51 @@ int LZ78::comprimir(string path){
 	this->cargarTabla();
 
 	string textoComprimido = "";
-	string leido = "";
-	string charLeido;
-	int codigoParaImprimir;
-	CadenaDeBits *codigoGuardado;
+	string stringLeido = "";
+	string charLeido = "";
+	bool esPrimerCaracter = false;
+	CadenaDeBits *codigoGuardado = new CadenaDeBits();
 	CadenaDeBits *cadenaLeida = new CadenaDeBits();
 
 	if (!bufferLectura->esFinDeArchivo()){
 		bufferLectura->leer(cadenaLeida);
-		charLeido = cadenaLeida->getChar();
+		charLeido = cadenaLeida->getAsChar();
+		esPrimerCaracter = true;
 		cout << "leo el caracter: " << charLeido << endl;
 	}
 
-	while (!bufferLectura->esFinDeArchivo()){
-		string nuevaCadena = leido+charLeido;
-		cout << "busco la cadena: " << nuevaCadena << endl;
+	while ( (!bufferLectura->esFinDeArchivo()) || esPrimerCaracter){
+		esPrimerCaracter = false;
+		string nuevoString = stringLeido+charLeido;
+		cout << "busco la cadena: " << nuevoString << endl;
 
-		if (!(this->tabla.exists(nuevaCadena))){
-			this->imprimirCodigo(codigoParaImprimir);
-			this->tabla.agregarString(nuevaCadena);
-			this->imprimirTabla(nuevaCadena);
-			leido = "";
+		if (!(this->tabla.exists(nuevoString))){
+			this->imprimirCodigo(codigoGuardado->bits);
+			this->tabla.agregarString(nuevoString);
+//			this->imprimirTabla(nuevoString);
+			stringLeido = "";
 			cout << "no la encuentro" << endl;
-			cout << "imprimo el codigo: " << codigoParaImprimir <<endl<<endl;
+			cout << "imprimo el codigo: " << codigoGuardado->bits <<endl<<endl;
 		} else {
-			codigoGuardado delete;
-			codigoGuardado = &(this->tabla.getBits(nuevaCadena));
-			leido = nuevaCadena;
-			codigoParaImprimir = codigoGuardado->bits;
+			this->tabla.getBits(nuevoString,codigoGuardado);
+			stringLeido = nuevoString;
 			cout << "la encuentro" << endl;
 			bufferLectura->leer(cadenaLeida);
+			charLeido = cadenaLeida->getAsChar();
 
-			if (textIterator == textoParaComprimir.end()){
-				this->imprimirCodigo(codigoParaImprimir);
-				cout << "como es fin de archivo imprimo el codigo " << codigoParaImprimir << endl;
+			if (bufferLectura->esFinDeArchivo()){
+				this->imprimirCodigo(codigoGuardado->bits);
+				cout << "como es fin de archivo imprimo el codigo " << codigoGuardado->bits << endl;
 			}
 		}
 	}
-delete codigoGuardado;
-delete bufferLectura;
-delete cadenaLeida;
-return 0;
+	delete codigoGuardado;
+	delete bufferLectura;
+	delete cadenaLeida;
+	return 0;
 }
 
-//string LZ78::getNextChar(){
-//	if (!this->isTextIteratorInitialized){
-//		this->textIterator = this->textoParaComprimir.begin();
-//		this->isTextIteratorInitialized = true;
-//	} else if (!this->isEndOfString()){
-//		this->textIterator++;
-//	}
-//
-//	if (this->isEndOfString()){
-//		return "";
-//	} else {
-//		return (*(this->textIterator));
-//	}
-////	return (!this->isEndOfString()) ? (*this->textIterator) : empty;
-//}
-//
-//string LZ78::getCurrentChar(){
-//	if ((this->isTextIteratorInitialized) && (!this->isEndOfString())){
-//		return (*this->textIterator);
-//	}
-//	return "";
-//}
 
-//bool LZ78::isEndOfString(){
-////	if (!this->isTextIteratorInitialized){
-////		return false;
-////	}
-//	return (this->textIterator == this->textoParaComprimir.end());
-//}
-
-
-//string LZ78::getCadenaCodigo(int codigo){
-//	if (codigo < 256){
-//			char caracter = (char)codigo;
-//			string c = "";
-//			c = c+caracter;
-//			return c;
-//		}
-////	this->tabla.getString(codigo);
-//	map<string,int>::iterator iterador = table.begin();
-//	bool encontrado = false;
-//	string cadena ="";
-//	while (iterador != table.end() && !(encontrado)){
-//		if (((*iterador).second) == codigo){
-//			cadena = (*iterador).first;
-//			encontrado = true;
-//		}
-//	iterador++;
-//	}
-//	return cadena;
-//}
 
 int LZ78::getNextCodigo(string::iterator &codeIterator){
 	string charLeido;

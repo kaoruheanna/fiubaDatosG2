@@ -16,7 +16,8 @@ public:
 	Tabla();
 	virtual ~Tabla();
 	// Metodos de InterfazTabla
-	virtual CadenaDeBits getBits(string cadena);
+//	virtual CadenaDeBits getBits(string cadena);
+	virtual void getBits(string cadena,CadenaDeBits* cadenaDeBits);
 	virtual string getString(CadenaDeBits bits);
 	virtual CadenaDeBits agregarString(string cadena);
 	virtual bool exists(string cadena);

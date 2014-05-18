@@ -15,6 +15,11 @@
 
 using namespace std;
 
+CadenaDeBits::CadenaDeBits() {
+	this->bits = 0;
+	this->tamanio = TAMANIO_BYTE;
+}
+
 CadenaDeBits::CadenaDeBits(size_t tamanio, int bits) {
 	// TODO Auto-generated constructor stub
 	this->bits = bits;
@@ -27,7 +32,7 @@ CadenaDeBits::~CadenaDeBits() {
 
 void CadenaDeBits::serializar(void* output, short index) const{
 	char *outputString = (char*)output;
-	cout << "entra " << output;
+//	cout << "entra " << output;
 
 	sprintf((char*)output,"%d",this->bits);
 
@@ -47,13 +52,13 @@ void CadenaDeBits::deserializar(void* input, short index){
 
 	short offset = (sizeof(long)-this->tamanioEnBytes(index))*TAMANIO_BYTE;
 	short shift = (this->tamanioEnBytes(index) * TAMANIO_BYTE) - this->tamanio;
-	cout << "aux antes " << aux  << "char pos 0 " << inputString[0] << endl;
+//	cout << "aux antes " << aux  << "char pos 0 " << inputString[0] << endl;
 
 	aux <<= offset + index;
 	aux >>= offset;
 	this->bits = aux;
 	this->bits >>= shift;
-	cout << "aux " << aux <<  " offset " << offset << " index shift " << index << " shift " << shift << "Entra " << inputString << " Sale " << this->bits << endl;
+//	cout << "aux " << aux <<  " offset " << offset << " index shift " << index << " shift " << shift << "Entra " << inputString << " Sale " << this->bits << endl;
 }
 
 size_t CadenaDeBits::tamanioEnBytes(short index) const{

@@ -12,7 +12,8 @@
 
 class InterfazTabla {
 	public:
-        virtual CadenaDeBits getBits(string cadena) = 0;
+//        virtual CadenaDeBits getBits(string cadena) = 0;
+		virtual void getBits(string cadena,CadenaDeBits* cadenaDeBits) = 0;
         virtual string getString(CadenaDeBits bits) = 0;
         virtual CadenaDeBits agregarString(string cadena) = 0;
         virtual bool exists(string cadena) = 0;

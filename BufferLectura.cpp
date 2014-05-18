@@ -22,8 +22,8 @@ void BufferLectura::actualizarBuffer(){
 }
 
 void BufferLectura::leer(CadenaDeBits* cadena){
-	cout << _buffer << endl;
-	cout << "ingreso con index " << (_index/TAMANIO_BYTE) << endl;
+//	cout << _buffer << endl;
+//	cout << "ingreso con index " << (_index/TAMANIO_BYTE) << endl;
 
 	short indexOnChar = _index % TAMANIO_BYTE;
 	float bitsRestantesEnBuffer = (float)this->bitsRestantesEnBuffer();
@@ -31,7 +31,7 @@ void BufferLectura::leer(CadenaDeBits* cadena){
 	float bitsFaltantes =  -(bitsRestantesEnBuffer - cadena->tamanio);
 	short bytesFaltantes = (bitsFaltantes > 0) ? ceil(bitsFaltantes/TAMANIO_BYTE) : 0;
 
-	cout << "bitsfaltantes"<<bitsFaltantes <<  " bitsrestantes " << bitsRestantesEnBuffer << " bytesFaltantes" << bytesFaltantes << "Tamanio " << cadena->tamanio << " chars " << tamanioEnBytes << endl;
+//	cout << "bitsfaltantes"<<bitsFaltantes <<  " bitsrestantes " << bitsRestantesEnBuffer << " bytesFaltantes" << bytesFaltantes << "Tamanio " << cadena->tamanio << " chars " << tamanioEnBytes << endl;
 
 	char* aux = new char [tamanioEnBytes];
 
@@ -46,7 +46,7 @@ void BufferLectura::leer(CadenaDeBits* cadena){
 	cadena->deserializar(aux,indexOnChar);
 	delete[] aux;
 
-	cout << "index " << _index << " tamanio current buffer " << _tamanioCurrentBuffer << endl;
+//	cout << "index " << _index << " tamanio current buffer " << _tamanioCurrentBuffer << endl;
 
 	if((_index >= (_tamanioCurrentBuffer*TAMANIO_BYTE)) && !(bytesFaltantes > 0)){
 		actualizarBuffer();
