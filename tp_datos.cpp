@@ -11,26 +11,33 @@
 #include "LZ78.h"
 #include "Tabla.h"
 #include "BufferLectura.h"
+#include "BufferEscritura.h"
 #include "Constantes.h"
 #include "CadenaDeBits.h"
 
 using namespace std;
 
 int main() {
+	BufferLectura *buffer = new BufferLectura(TAMANIO_BUFFER, false);
+	buffer->crearStream("salidaBuffer.txt");
 
-	BufferLectura *buffer = new BufferLectura(TAMANIO_BUFFER);
-	buffer->crearStream("entrada.txt");
+	BufferEscritura *bufferEscritura = new BufferEscritura(TAMANIO_BUFFER, false);
+	bufferEscritura->crearStream("salidaBuffer2.txt");
+
+	CadenaDeBits *cadenaDeBits= new CadenaDeBits(9,0);
+
 	int i = 0;
 	while(!buffer->esFinDeArchivo()){
 		cout << "Iteracion " << i << endl;
-		CadenaDeBits *cadenaDeBits= new CadenaDeBits(8,0);
 		buffer->leer(cadenaDeBits);
 		cout << cadenaDeBits->getAsChar() << endl;
-		delete cadenaDeBits;
+
+		bufferEscritura->escribir(cadenaDeBits);
 
 		i++;
 	}
-
+	delete cadenaDeBits;
+	delete bufferEscritura;
 
 	LZ78 *lz78 = new LZ78();
 	string texto = "ababababc";

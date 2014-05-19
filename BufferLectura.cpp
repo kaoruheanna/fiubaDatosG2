@@ -7,7 +7,9 @@
 
 #include "BufferLectura.h"
 
-BufferLectura::BufferLectura(size_t tamanio) : Buffer(tamanio){}
+BufferLectura::BufferLectura(size_t tamanio, bool esCompresion) : Buffer(tamanio, esCompresion){
+	posFinDeArchivo = ((tamanio + 1)  * TAMANIO_BYTE); // Para que no llege excepto que alla eof
+}
 
 BufferLectura::~BufferLectura() {
 	this->cerrar();
@@ -18,20 +20,25 @@ void BufferLectura::actualizarBuffer(){
 		_file->read(_buffer,tamanioBuffer);
 		_tamanioCurrentBuffer = _file->gcount();
 		_index = 0;
+		if((!esCompresion) && _file->eof()){
+			posFinDeArchivo = ((_tamanioCurrentBuffer * TAMANIO_BYTE) - 1);
+			unsigned char marcaFinDeArchivo = 1;
+			unsigned char aComparar = _buffer[_tamanioCurrentBuffer - 1];
+			while((aComparar & marcaFinDeArchivo) == 0){
+				posFinDeArchivo --;
+				marcaFinDeArchivo <<= 1;
+			}
+			cout << " posFinDeArchivo: " << posFinDeArchivo << " tamnio de buffer: " << _tamanioCurrentBuffer << endl;
+		}
 	}
 }
 
 void BufferLectura::leer(CadenaDeBits* cadena){
-	cout << _buffer << endl;
-	cout << "ingreso con index " << (_index/TAMANIO_BYTE) << endl;
-
 	short indexOnChar = _index % TAMANIO_BYTE;
 	float bitsRestantesEnBuffer = (float)this->bitsRestantesEnBuffer();
 	size_t tamanioEnBytes = cadena->tamanioEnBytes(indexOnChar);
 	float bitsFaltantes =  -(bitsRestantesEnBuffer - cadena->tamanio);
 	short bytesFaltantes = (bitsFaltantes > 0) ? ceil(bitsFaltantes/TAMANIO_BYTE) : 0;
-
-	cout << "bitsfaltantes"<<bitsFaltantes <<  " bitsrestantes " << bitsRestantesEnBuffer << " bytesFaltantes" << bytesFaltantes << "Tamanio " << cadena->tamanio << " chars " << tamanioEnBytes << endl;
 
 	char* aux = new char [tamanioEnBytes];
 
@@ -46,16 +53,15 @@ void BufferLectura::leer(CadenaDeBits* cadena){
 	cadena->deserializar(aux,indexOnChar);
 	delete[] aux;
 
-	cout << "index " << _index << " tamanio current buffer " << _tamanioCurrentBuffer << endl;
-
 	if((_index >= (_tamanioCurrentBuffer*TAMANIO_BYTE)) && !(bytesFaltantes > 0)){
 		actualizarBuffer();
 	}
-
 }
 
 bool BufferLectura::esFinDeArchivo(){
-	return _file->eof() && (_index>=(_tamanioCurrentBuffer*TAMANIO_BYTE));
+	cout << "Es fin de archivo: " << (_file->eof() && ((_index >= (_tamanioCurrentBuffer*TAMANIO_BYTE)) || (_index >= posFinDeArchivo))) << endl;
+	cout << "EOF: " << _file->eof() << " > Tamanio: " << (_index >= (_tamanioCurrentBuffer*TAMANIO_BYTE)) << " > EOFN: " << (_index >= posFinDeArchivo) << endl;
+	return _file->eof() && ((_index >= (_tamanioCurrentBuffer*TAMANIO_BYTE)) || (_index >= posFinDeArchivo));
 }
 
 void BufferLectura::crearStream(string fileName){

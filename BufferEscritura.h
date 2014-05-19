@@ -12,7 +12,7 @@
 
 class BufferEscritura: public Buffer {
 public:
-	BufferEscritura(size_t tamanio);
+	BufferEscritura(size_t tamanio, bool esCompresion);
 	virtual ~BufferEscritura();
 
 	void escribir(const CadenaDeBits* cadena);

@@ -9,7 +9,8 @@
 
 using namespace std;
 
-Buffer::Buffer(size_t tamanio): tamanioBuffer(tamanio) {
+Buffer::Buffer(size_t tamanio, bool esCompresion): tamanioBuffer(tamanio), esCompresion(esCompresion) {
+	_tamanioCurrentBuffer = tamanio;
 	_buffer = new char [tamanio];
 	_index = 0;
 }
