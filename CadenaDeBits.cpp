@@ -32,11 +32,33 @@ CadenaDeBits::~CadenaDeBits() {
 
 void CadenaDeBits::serializar(void* output, short index) const{
 	char *outputString = (char*)output;
-//	cout << "entra " << output;
+	cout << "entra " << outputString << endl;
 
-	sprintf((char*)output,"%d",this->bits);
+	unsigned long aux = 0;
+	unsigned long auxBits = this->bits;
+	cout << "bits " << bits << endl;
+	for(unsigned int i = 0 ; i < this->tamanioEnBytes(index) ; i++){
+		memcpy(&aux, &outputString[i], 1);
+		aux <<= 8;
+		cout << "aux: " << aux << " outputString[" << i << "] = " << outputString[i] << endl;
+	}
+	aux >>= 8;
+	cout << "aux leido " << aux << " index " << index << endl;
 
-	cout << "Tengo " << this->bits << " Sale " << output << endl;
+	aux >>= ((this->tamanioEnBytes(index)*TAMANIO_BYTE)-index);
+	aux <<= ((this->tamanioEnBytes(index)*TAMANIO_BYTE)-index);
+
+	auxBits <<= ((this->tamanioEnBytes(index)*TAMANIO_BYTE)-tamanio);
+	auxBits >>= index;
+	aux |= auxBits;
+	cout << "aux parseado " << aux << " auxBits " << auxBits << endl;
+
+	for(unsigned int i = this->tamanioEnBytes(index) ; i > 0 ; i--){
+		memcpy(&outputString[i-1],&aux,1);
+		cout << "aux: " << aux << " outputString[" << i-1 << "] = " << outputString[i-1] << endl;
+		aux >>= 8;
+	}
+	cout << "Tengo " << this->bits << " Sale " << outputString << endl;
 }
 
 void CadenaDeBits::deserializar(void* input, short index){
@@ -52,13 +74,11 @@ void CadenaDeBits::deserializar(void* input, short index){
 
 	short offset = (sizeof(long)-this->tamanioEnBytes(index))*TAMANIO_BYTE;
 	short shift = (this->tamanioEnBytes(index) * TAMANIO_BYTE) - this->tamanio;
-//	cout << "aux antes " << aux  << "char pos 0 " << inputString[0] << endl;
 
 	aux <<= offset + index;
 	aux >>= offset;
 	this->bits = aux;
 	this->bits >>= shift;
-//	cout << "aux " << aux <<  " offset " << offset << " index shift " << index << " shift " << shift << "Entra " << inputString << " Sale " << this->bits << endl;
 }
 
 size_t CadenaDeBits::tamanioEnBytes(short index) const{

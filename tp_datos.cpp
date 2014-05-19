@@ -11,33 +11,40 @@
 #include "LZ78.h"
 #include "Tabla.h"
 #include "BufferLectura.h"
+#include "BufferEscritura.h"
 #include "Constantes.h"
 #include "CadenaDeBits.h"
 
 using namespace std;
 
 int main() {
+	BufferLectura *buffer = new BufferLectura(TAMANIO_BUFFER, false);
+	buffer->crearStream("salidaBuffer.txt");
 
-//	BufferLectura *buffer = new BufferLectura(TAMANIO_BUFFER);
-//	buffer->crearStream("entrada.txt");
-//	int i = 0;
-//	while(!buffer->esFinDeArchivo()){
-//		cout << "Iteracion " << i << endl;
-//		CadenaDeBits *cadenaDeBits= new CadenaDeBits(8,0);
-//		buffer->leer(cadenaDeBits);
-//		cout << cadenaDeBits->getAsChar() << endl;
-//		delete cadenaDeBits;
-//
-//		i++;
-//	}
+	BufferEscritura *bufferEscritura = new BufferEscritura(TAMANIO_BUFFER, false);
+	bufferEscritura->crearStream("salidaBuffer2.txt");
 
+	CadenaDeBits *cadenaDeBits= new CadenaDeBits(9,0);
+
+	int i = 0;
+	while(!buffer->esFinDeArchivo()){
+		cout << "Iteracion " << i << endl;
+		buffer->leer(cadenaDeBits);
+		cout << cadenaDeBits->getAsChar() << endl;
+
+		bufferEscritura->escribir(cadenaDeBits);
+
+		i++;
+	}
+	delete cadenaDeBits;
+	delete bufferEscritura;
 
 	LZ78 *lz78 = new LZ78();
 //	string texto = "ababababc";
 //	string texto2 = "abcababa";
 //	string textoComprimido = "001100001001100010100000000100000010001100010001100011";
 //	string textoComprimido2 = "001100001001100010001100011100000000100000011";
-	lz78->comprimir("entrada2.txt");
+	lz78->comprimir("entrada.txt");
 	//lz78->descomprimir(textoComprimido);
 	delete lz78;
 

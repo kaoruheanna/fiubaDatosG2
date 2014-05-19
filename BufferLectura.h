@@ -12,7 +12,7 @@
 
 class BufferLectura : public Buffer {
 public:
-	BufferLectura(size_t tamanio);
+	BufferLectura(size_t tamanio, bool esCompresion);
 	virtual ~BufferLectura();
 
 	void leer(CadenaDeBits* cadena);
@@ -24,7 +24,7 @@ public:
 	virtual void ImprimirEn(ostream& out) const;
 private:
 	ifstream* _file;
-
+	size_t posFinDeArchivo;
 	void actualizarBuffer();
 };
 

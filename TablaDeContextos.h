@@ -17,7 +17,7 @@ public:
 	void setContexto(char contexto);
 
 private:
-	map<char,Tabla*> mapaDeContextos;
+//	map<char,Tabla*> mapaDeContextos;
 	char contexto;
 //	string getChar(CadenaDeBits bits);
 

@@ -64,7 +64,7 @@ void LZ78::imprimirTabla(string cadena){
 //}
 
 int LZ78::comprimir(string path){
-	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER);
+	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER, true);
 	bufferLectura->crearStream(path);
 	this->cargarTabla();
 
@@ -132,14 +132,14 @@ void LZ78::cargarTabla(){
 }
 
 int LZ78::descomprimir(string path){
-	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER);
+	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER, false);
 	bufferLectura->crearStream(path);
 	this->cargarTabla();
 
 	CadenaDeBits *codigoParaDescomprimir = new CadenaDeBits();
 
 	string stringSinTerminar = "";
-	int codigoSinTerminar;
+//	int codigoSinTerminar;
 
 	string stringTerminado;
 //	int codigoTerminado;

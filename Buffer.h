@@ -24,10 +24,16 @@ using namespace std;
 
 class Buffer : public Imprimible{
 public:
-	Buffer(size_t tamanio);
+	Buffer(size_t tamanio, bool esCompresion);
 	virtual ~Buffer();
 
 	size_t tamanioBuffer;
+	/**
+	 * Indica si el buffer esta siendo usado para compresion o descompresion
+	 * NOTA IMPORTANTE: Tanto el buffer de lectura como de escritura tienen
+	 *  que estar en el mismo estado (los dos comprimiendo o descomprimiendo)
+	 */
+	bool esCompresion;
 	iostream* file;
 
 	virtual void crearStream(string archivo) = 0;
