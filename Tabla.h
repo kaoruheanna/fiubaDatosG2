@@ -24,14 +24,14 @@ public:
 	virtual bool exists(CadenaDeBits bits);
 	virtual void limpiar();
 	virtual bool hayQueLimpiar();
-	virtual size_t getTamanioTabla();
+	virtual size_t getCantidadBitsTabla();
 	int getLastCode();
 	void Imprimir(ostream& out);
 protected:
 	virtual void ImprimirEn(ostream& out) const;
 private:
 	int lastCode;
-	size_t bitsTabla;
+	size_t cantidadBitsTabla;
 	vector<string>* tabla;
 };
 

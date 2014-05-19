@@ -20,7 +20,7 @@ class InterfazTabla {
         virtual bool exists(CadenaDeBits bits) = 0;
         virtual void limpiar() = 0;
         virtual bool hayQueLimpiar() = 0;
-        virtual size_t getTamanioTabla() = 0;
+        virtual size_t getCantidadBitsTabla() = 0;
 
         virtual ~InterfazTabla(){};
 };

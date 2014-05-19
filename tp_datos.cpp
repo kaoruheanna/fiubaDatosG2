@@ -37,7 +37,7 @@ int main() {
 //	string texto2 = "abcababa";
 //	string textoComprimido = "001100001001100010100000000100000010001100010001100011";
 //	string textoComprimido2 = "001100001001100010001100011100000000100000011";
-	lz78->comprimir("entrada.txt");
+	lz78->comprimir("entrada2.txt");
 	//lz78->descomprimir(textoComprimido);
 	delete lz78;
 

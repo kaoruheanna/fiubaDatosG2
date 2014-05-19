@@ -9,7 +9,6 @@
 #define COMPRESOR_H_
 #include <string>
 #include <iostream>
-#include "math.h"
 #include "Imprimible.h"
 
 using namespace std;

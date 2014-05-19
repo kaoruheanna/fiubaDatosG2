@@ -14,8 +14,15 @@ class TablaDeContextos: public InterfazTabla {
 public:
 	TablaDeContextos();
 	virtual ~TablaDeContextos();
-
 	void setContexto(char contexto);
+
+private:
+	map<char,Tabla*> mapaDeContextos;
+	char contexto;
+//	string getChar(CadenaDeBits bits);
+
 };
+
+
 
 #endif /* TABLADECONTEXTOS_H_ */

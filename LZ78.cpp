@@ -148,7 +148,7 @@ int LZ78::descomprimir(string path){
 	CadenaDeBits *nuevoCodigo = new CadenaDeBits(0,0);
 
 	if (!bufferLectura->esFinDeArchivo()){
-		cuantosLeer = this->tabla.getTamanioTabla();
+		cuantosLeer = this->tabla.getCantidadBitsTabla();
 		cout << "Cant bits tabla: " << cuantosLeer << endl;
 		nuevoCodigo->tamanio = cuantosLeer;
 		bufferLectura->leer(nuevoCodigo);
@@ -167,7 +167,7 @@ int LZ78::descomprimir(string path){
 	}
 
 	while (!bufferLectura->esFinDeArchivo()){
-		cuantosLeer = this->tabla.getTamanioTabla();
+		cuantosLeer = this->tabla.getCantidadBitsTabla();
 		cout << "Cant bits tabla: " << cuantosLeer << endl;
 		nuevoCodigo->tamanio = cuantosLeer;
 		bufferLectura->leer(nuevoCodigo);
