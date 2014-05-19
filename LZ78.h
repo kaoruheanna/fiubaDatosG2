@@ -11,6 +11,7 @@
 #include "Compresor.h"
 #include "Tabla.h"
 #include "CadenaDeBits.h"
+#include "Constantes.h"
 #include <map>
 #include <iostream>
 #include <fstream>
@@ -20,8 +21,8 @@ class LZ78 : public Compresor{
 public:
 	LZ78();
 	virtual ~LZ78();
-	virtual int comprimir(string &path);
-	virtual int descomprimir(string &path);
+	virtual int comprimir(string path);
+	virtual int descomprimir(string path);
 
 protected:
 	virtual void ImprimirEn(ostream & out) const;

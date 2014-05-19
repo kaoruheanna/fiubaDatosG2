@@ -12,6 +12,7 @@
 
 class CadenaDeBits: public Imprimible {
 public:
+	CadenaDeBits(); //lo inicializa para char
 	CadenaDeBits(size_t tamanio, int bits);
 	virtual ~CadenaDeBits();
 	size_t tamanio;

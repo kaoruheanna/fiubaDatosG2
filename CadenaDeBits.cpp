@@ -15,6 +15,11 @@
 
 using namespace std;
 
+CadenaDeBits::CadenaDeBits() {
+	this->bits = 0;
+	this->tamanio = TAMANIO_BYTE;
+}
+
 CadenaDeBits::CadenaDeBits(size_t tamanio, int bits) {
 	// TODO Auto-generated constructor stub
 	this->bits = bits;
