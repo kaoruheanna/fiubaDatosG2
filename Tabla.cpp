@@ -92,3 +92,7 @@ void Tabla::ImprimirEn(ostream & out) const{
 	}
 	out << "Fin Tabla"<< endl;
 }
+
+void Tabla::borrarTodo(){
+	this->tabla->clear();
+}

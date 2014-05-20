@@ -17,8 +17,8 @@ class Compresor : public Imprimible{
     public:
 		Compresor(){}
 		virtual ~Compresor(){}
-        virtual int comprimir(string path) = 0;
-        virtual int descomprimir(string path) = 0;
+        virtual int comprimir(string archivoEntrada, string archivoSalida) = 0;
+        virtual int descomprimir(string archivoEntrada, string archivoSalida) = 0;
 
     protected:
         //virtual bool agregarCadenaATabla(string cadena) = 0;

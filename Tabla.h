@@ -27,6 +27,7 @@ public:
 	virtual size_t getCantidadBitsTabla();
 	int getLastCode();
 	void Imprimir(ostream& out);
+	void borrarTodo();
 protected:
 	virtual void ImprimirEn(ostream& out) const;
 private:

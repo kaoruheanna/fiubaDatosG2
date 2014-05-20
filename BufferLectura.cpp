@@ -13,6 +13,7 @@ BufferLectura::BufferLectura(size_t tamanio, bool esCompresion) : Buffer(tamanio
 
 BufferLectura::~BufferLectura() {
 	this->cerrar();
+	delete _file;
 }
 
 void BufferLectura::actualizarBuffer(){
@@ -24,11 +25,11 @@ void BufferLectura::actualizarBuffer(){
 			posFinDeArchivo = ((_tamanioCurrentBuffer * TAMANIO_BYTE) - 1);
 			unsigned char marcaFinDeArchivo = 1;
 			unsigned char aComparar = _buffer[_tamanioCurrentBuffer - 1];
-			while((aComparar & marcaFinDeArchivo) == 0){
+			while(((aComparar & marcaFinDeArchivo) == 0) && (marcaFinDeArchivo != 0)){
 				posFinDeArchivo --;
 				marcaFinDeArchivo <<= 1;
 			}
-			cout << " posFinDeArchivo: " << posFinDeArchivo << " tamnio de buffer: " << _tamanioCurrentBuffer << endl;
+//			cout << " posFinDeArchivo: " << posFinDeArchivo << " tamnio de buffer: " << _tamanioCurrentBuffer << endl;
 		}
 	}
 }
@@ -59,8 +60,8 @@ void BufferLectura::leer(CadenaDeBits* cadena){
 }
 
 bool BufferLectura::esFinDeArchivo(){
-	cout << "Es fin de archivo: " << (_file->eof() && ((_index >= (_tamanioCurrentBuffer*TAMANIO_BYTE)) || (_index >= posFinDeArchivo))) << endl;
-	cout << "EOF: " << _file->eof() << " > Tamanio: " << (_index >= (_tamanioCurrentBuffer*TAMANIO_BYTE)) << " > EOFN: " << (_index >= posFinDeArchivo) << endl;
+//	cout << "Es fin de archivo: " << (_file->eof() && ((_index >= (_tamanioCurrentBuffer*TAMANIO_BYTE)) || (_index >= posFinDeArchivo))) << endl;
+//	cout << "EOF: " << _file->eof() << " > Tamanio: " << (_index >= (_tamanioCurrentBuffer*TAMANIO_BYTE)) << " > EOFN: " << (_index >= posFinDeArchivo) << endl;
 	return _file->eof() && ((_index >= (_tamanioCurrentBuffer*TAMANIO_BYTE)) || (_index >= posFinDeArchivo));
 }
 
@@ -75,5 +76,5 @@ void BufferLectura::cerrar(){
 }
 
 void BufferLectura::ImprimirEn(ostream& out) const{
-	out << "Buffer Lectura Tamanio: " << tamanioBuffer << endl;
+//	out << "Buffer Lectura Tamanio: " << tamanioBuffer << endl;
 }

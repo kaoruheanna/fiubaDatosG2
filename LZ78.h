@@ -12,6 +12,8 @@
 #include "Tabla.h"
 #include "CadenaDeBits.h"
 #include "Constantes.h"
+#include "BufferLectura.h"
+#include "BufferEscritura.h"
 #include <map>
 #include <iostream>
 #include <fstream>
@@ -21,8 +23,8 @@ class LZ78 : public Compresor{
 public:
 	LZ78();
 	virtual ~LZ78();
-	virtual int comprimir(string path);
-	virtual int descomprimir(string path);
+	virtual int comprimir(string archivoEntrada, string archivoSalida);
+	virtual int descomprimir(string archivoEntrada, string archivoSalida);
 
 protected:
 	virtual void ImprimirEn(ostream & out) const;
@@ -30,8 +32,6 @@ protected:
 
 private:
 	Tabla tabla;
-	//int lastCode;
-	//int cantDeBits;
 	ofstream fileTabla;
 	ofstream fileSalida;
 
@@ -39,11 +39,9 @@ private:
 	void cargarTabla();
 	//int getCodigoCadena(string cadena);
 	//string getCadenaCodigo(int codigo);
-	void imprimirCadena(string cadena);
-	void imprimirCodigo(int codigo);
+	void imprimirCadena(string cadena, BufferEscritura* bufferEscritura);
+	void imprimirCodigo(CadenaDeBits* codigo, BufferEscritura* bufferEscritura);
 	void imprimirTabla(string cadena);
-	int getNextCodigo(string::iterator &iterador);
-	int binToInt(string codigoBinario);
 //	string getNextChar();
 //	string getCurrentChar();
 //	bool isEndOfString();
