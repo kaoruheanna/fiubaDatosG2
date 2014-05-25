@@ -28,7 +28,8 @@ public:
 
 private:
 	map<char,Tabla*> mapaDeContextos;
-	char* contexto;
+	char contexto;
+	bool contextoSeteado;
 
 	bool tengoContexto();
 	Tabla* getTablaActual();

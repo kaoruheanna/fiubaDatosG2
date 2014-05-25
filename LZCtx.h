@@ -25,6 +25,8 @@ public:
 	virtual int comprimir(string archivoEntrada, string archivoSalida);
 	virtual int descomprimir(string archivoEntrada, string archivoSalida);
 
+protected:
+	virtual void ImprimirEn(ostream & out) const;
 
 private:
 	TablaDeContextos tabla;

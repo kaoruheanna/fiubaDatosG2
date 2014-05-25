@@ -9,6 +9,7 @@
 #include <iostream>
 #include <stdio.h>
 #include "LZ78.h"
+#include "LZCtx.h"
 #include "Tabla.h"
 #include "BufferLectura.h"
 #include "BufferEscritura.h"
@@ -39,15 +40,16 @@ int main(int argc, char **argv) {
 				return 0;
 			}
 		}
-		LZ78 *lz78 = new LZ78();
+		//Compresor *compresor = new LZ78();
+		Compresor *compresor = new LZCtx();
 		if(esCompresion){
 			cout << "Comprimiendo: " << nombreEntrada << " a " << nombreSalida << endl;
-			lz78->comprimir(nombreEntrada,nombreSalida);
+			compresor->comprimir(nombreEntrada,nombreSalida);
 		} else {
 			cout << "Desomprimiendo: " << nombreEntrada << " a " << nombreSalida << endl;
-			lz78->descomprimir(nombreEntrada,nombreSalida);
+			compresor->descomprimir(nombreEntrada,nombreSalida);
 		}
-		delete lz78;
+		delete compresor;
 	}
 	return 0;
 }

@@ -14,6 +14,7 @@ TablaDeContextos::TablaDeContextos() {
 		this->mapaDeContextos[c] = new Tabla();
 	}
 	this->contexto = NULL;
+	this->contextoSeteado = false;
 }
 
 TablaDeContextos::~TablaDeContextos() {
@@ -25,13 +26,17 @@ TablaDeContextos::~TablaDeContextos() {
 }
 
 void TablaDeContextos::setContexto(char contexto){
-	this->contexto = &contexto;
+	this->contexto = contexto;
+	this->contextoSeteado = true;
+
 }
 
 bool TablaDeContextos::exists(string cadena){
 	if (!this->tengoContexto()){
 		return false;
 	}
+	char contexto = this->contexto;
+	cout << "estoy en contexto " << contexto << " y busco " << cadena << endl;
 	Tabla* tabla = this->getTablaActual();
 	return tabla->exists(cadena);
 }
@@ -62,14 +67,15 @@ void TablaDeContextos::getBits(string cadena,CadenaDeBits* cadenaDeBits){
 }
 
 bool TablaDeContextos::tengoContexto(){
-	return (this->contexto != NULL);
+//	return (this->contexto != NULL);
+	return this->contextoSeteado;
 }
 
 Tabla* TablaDeContextos::getTablaActual(){
 	if (!this->tengoContexto()){
 		return NULL;
 	}
-	return this->mapaDeContextos[*(this->contexto)];
+	return this->mapaDeContextos[this->contexto];
 }
 
 /**
