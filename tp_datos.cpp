@@ -17,7 +17,7 @@
 
 using namespace std;
 
-int main() {
+int main(int argc, char **argv) {
 //	BufferLectura *buffer = new BufferLectura(TAMANIO_BUFFER, true);
 //	buffer->crearStream("salidaBuffer.txt");
 //
@@ -44,8 +44,13 @@ int main() {
 //	string texto2 = "abcababa";
 //	string textoComprimido = "001100001001100010100000000100000010001100010001100011";
 //	string textoComprimido2 = "001100001001100010001100011100000000100000011";
-//	lz78->comprimir("entrada.txt","salida.txt");
-	lz78->descomprimir("salida.txt","salida2.txt");
+	if(strcmp(argv[1], "-c") == 0){
+		cout << "Comprimiendo: " << argv[2] << " a " << argv[3] << endl;
+		lz78->comprimir(argv[2],argv[3]);
+	} else {
+		cout << "Desomprimiendo: " << argv[2] << " a " << argv[3] << endl;
+		lz78->descomprimir(argv[2],argv[3]);
+	}
 	delete lz78;
 
 	 //Pruebas de Tabla

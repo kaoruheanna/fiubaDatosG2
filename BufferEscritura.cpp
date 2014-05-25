@@ -18,8 +18,8 @@ BufferEscritura::~BufferEscritura() {
 }
 
 void BufferEscritura::escribir(const CadenaDeBits* cadena){
-//	cout << "Buffer " << _buffer << endl;
-//	cout << "ingreso con index " << (_index/TAMANIO_BYTE) << endl;
+	cout << "Buffer " << _buffer << endl;
+	cout << "ingreso con index " << (_index/TAMANIO_BYTE) << endl;
 
 	//Escribir en el buffer
 	short indexOnChar = _index % TAMANIO_BYTE;
@@ -28,7 +28,7 @@ void BufferEscritura::escribir(const CadenaDeBits* cadena){
 	float bitsFaltantes =  -(bitsRestantesEnBuffer - cadena->tamanio);
 	short bytesFaltantes = (bitsFaltantes > 0) ? ceil(bitsFaltantes/TAMANIO_BYTE) : 0;
 
-//	cout << "bitsfaltantes " <<bitsFaltantes <<  " bitsrestantes " << bitsRestantesEnBuffer << " bytesFaltantes" << bytesFaltantes << "Tamanio " << cadena->tamanio << " chars " << tamanioEnBytes << endl;
+	cout << "bitsfaltantes " <<bitsFaltantes <<  " bitsrestantes " << bitsRestantesEnBuffer << " bytesFaltantes" << bytesFaltantes << "Tamanio " << cadena->tamanio << " chars " << tamanioEnBytes << endl;
 
 	char* aux = new char [tamanioEnBytes];
 	memcpy(aux,_buffer+(_index/TAMANIO_BYTE),tamanioEnBytes-bytesFaltantes);
@@ -37,7 +37,7 @@ void BufferEscritura::escribir(const CadenaDeBits* cadena){
 	memcpy(_buffer+(_index/TAMANIO_BYTE),aux,tamanioEnBytes-bytesFaltantes);
 	_index += cadena->tamanio;
 
-	if((bytesFaltantes > 0) || ((_index/TAMANIO_BYTE) >= _tamanioCurrentBuffer)){
+	if((bytesFaltantes > 0) || ((_index/(long) TAMANIO_BYTE) >= _tamanioCurrentBuffer)){
 		this->guardarEnDisco();
 		if(bytesFaltantes > 0){
 			memcpy(_buffer,aux+(tamanioEnBytes-bytesFaltantes),bytesFaltantes);
@@ -45,7 +45,7 @@ void BufferEscritura::escribir(const CadenaDeBits* cadena){
 		}
 	}
 
-//	cout << "index " << _index << " tamanio current buffer " << _tamanioCurrentBuffer << endl;
+	cout << "index " << _index << " tamanio current buffer " << _tamanioCurrentBuffer << endl;
 	delete[] aux;
 }
 string hola;
@@ -66,14 +66,15 @@ void BufferEscritura::cerrar(){
 void BufferEscritura::agregarFinDeArchivo(){
 	if(esCompresion){
 		unsigned char finDeArchivo = 1;
-		int tamanioDeFinDeArchivo = (_index % TAMANIO_BYTE);
+		cout << "index: " << _index << " ";
+		int tamanioDeFinDeArchivo = TAMANIO_BYTE - (_index % TAMANIO_BYTE);
 		if(tamanioDeFinDeArchivo < 1){
-			tamanioDeFinDeArchivo = 8;
+			tamanioDeFinDeArchivo = TAMANIO_BYTE;
 		}
 		finDeArchivo <<= (tamanioDeFinDeArchivo - 1);
-//		cout<< "tamanio EOF: " << tamanioDeFinDeArchivo << " finDeArchivo: ";
+		cout<< "tamanio EOF: " << tamanioDeFinDeArchivo << " finDeArchivo: ";
 		printf("%02x", (unsigned int)finDeArchivo);
-//		cout << endl;
+		cout << endl;
 		CadenaDeBits bitsDeFinDeArchivo(tamanioDeFinDeArchivo, (int) finDeArchivo);
 		escribir(&bitsDeFinDeArchivo);
 	}

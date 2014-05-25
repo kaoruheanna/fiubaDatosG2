@@ -142,6 +142,10 @@ int LZ78::descomprimir(string archivoEntrada, string archivoSalida){
 
 	while (!bufferLectura->esFinDeArchivo()){
 		cuantosLeer = this->tabla.getCantidadBitsTabla();
+		int maxValor = (pow(2.0,(int)(cuantosLeer)));
+		if(maxValor <= (this->tabla.getLastCode() + 1)){
+			cuantosLeer ++;
+		}
 		nuevoCodigo->tamanio = cuantosLeer;
 		bufferLectura->leer(nuevoCodigo);
 		cout << "código leído: " << nuevoCodigo->bits << endl;
