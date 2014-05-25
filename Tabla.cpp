@@ -9,8 +9,9 @@
 #include <math.h>
 
 Tabla::Tabla() {
-	this->cantidadBitsTabla = 1;
-	this->lastCode = 0;
+	this->cantidadBitsTabla = 2;
+	// La posicion 0 es el codigo de limpieza
+	this->lastCode = 1;
 	this->tabla = new vector<string>;
 	this->mapa = new map<string,int>();
 }
@@ -49,13 +50,13 @@ void Tabla::getBits(string cadena,CadenaDeBits* cadenaDeBits){
 		currentIndex ++;
 	} */
 	cadenaDeBits->tamanio = this->cantidadBitsTabla;
-	cadenaDeBits->bits = this->mapa->at(cadena);
+	cadenaDeBits->bits = this->mapa->at(cadena) + 1;
 }
 
 
 string Tabla::getString(CadenaDeBits bits){
 	if(Tabla::exists(bits)){
-		return this->tabla->at(bits.bits);
+		return this->tabla->at(bits.bits - 1);
 	}
 	return "";
 }
@@ -74,25 +75,30 @@ bool Tabla::exists(string cadena){
 	}
 	return encontrado;*/
 }
+
 bool Tabla::exists(CadenaDeBits bits){
 	return (bits.bits < lastCode);
 }
-void Tabla::limpiar(){
 
+void Tabla::limpiar(){
+	this->borrarTodo();
 }
+
 bool Tabla::hayQueLimpiar(){
-	return false;
+	return (this->cantidadBitsTabla >= 10);
 }
+
 size_t Tabla::getCantidadBitsTabla(){
 	return this->cantidadBitsTabla;
 }
+
 void Tabla::Imprimir(ostream& out){
 	this->ImprimirEn(out);
 }
 
 void Tabla::ImprimirEn(ostream & out) const{
 	out << "Tabla:" << endl;
-	for (int currentIndex = 0; currentIndex < this->tabla->size(); currentIndex++) {
+	for (unsigned int currentIndex = 0; currentIndex < this->tabla->size(); currentIndex++) {
 		out << currentIndex << " => " << this->tabla->at(currentIndex) << endl;
 	}
 	out << "Fin Tabla"<< endl;
@@ -100,4 +106,17 @@ void Tabla::ImprimirEn(ostream & out) const{
 
 void Tabla::borrarTodo(){
 	this->tabla->clear();
+	this->mapa->clear();
+	this->cantidadBitsTabla = 2;
+	// La posicion 0 es el codigo de limpieza
+	this->lastCode = 1;
+}
+
+bool Tabla::esCodigoLimpieza(CadenaDeBits *cadena){
+	return (cadena->bits == 0);
+}
+
+void Tabla::obtenerCodigoLimpieza(CadenaDeBits *cadena){
+	cadena->bits = 0;
+	cadena->tamanio = this->cantidadBitsTabla;
 }

@@ -30,6 +30,8 @@ public:
 	int getLastCode();
 	void Imprimir(ostream& out);
 	void borrarTodo();
+	bool esCodigoLimpieza(CadenaDeBits *cadena);
+	void obtenerCodigoLimpieza(CadenaDeBits *cadena);
 protected:
 	virtual void ImprimirEn(ostream& out) const;
 private:
