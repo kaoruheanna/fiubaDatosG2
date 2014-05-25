@@ -11,5 +11,6 @@
 //El tamanio del buffer expresado en bytes
 #define TAMANIO_BUFFER 1048576
 #define TAMANIO_BYTE 8
+#define EXTENSION_ARCHIVO_COMPRIMIDO ".13"
 
 #endif /* CONSTANTES_H_ */
