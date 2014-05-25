@@ -43,7 +43,7 @@ protected:
 	size_t _index;
 	size_t _tamanioCurrentBuffer;
 
-	short bitsRestantesEnBuffer();
+	size_t bitsRestantesEnBuffer();
 };
 
 #endif /* BUFFER_H_ */

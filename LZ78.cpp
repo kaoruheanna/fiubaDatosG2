@@ -23,14 +23,14 @@ void LZ78::imprimirCadena(string cadena, BufferEscritura* bufferEscritura){
 		textIterator++;
 		paraGuardar->bits = (int)caracter;
 		bufferEscritura->escribir(paraGuardar);
-		cout << "ESCRIBO: " << caracter << endl;
+		//cout << "ESCRIBO: " << caracter << endl;
 	}
 	delete paraGuardar;
 }
 
 void LZ78::imprimirCodigo(CadenaDeBits* codigo, BufferEscritura* bufferEscritura){
 	bufferEscritura->escribir(codigo);
-	cout << "ESCRIBO: " << codigo->bits << endl;
+	//cout << "ESCRIBO: " << codigo->bits << endl;
 }
 
 void LZ78::imprimirTabla(string cadena){
@@ -82,7 +82,10 @@ int LZ78::comprimir(string archivoEntrada, string archivoSalida){
 
 			if (bufferLectura->esFinDeArchivo()){
 				this->imprimirCodigo(codigoGuardado,bufferEscritura);
-				cout << "como es fin de archivo imprimo el codigo " << codigoGuardado->bits << endl;
+				nuevoString = charLeido;
+				this->tabla.getBits(nuevoString,codigoGuardado);
+				this->imprimirCodigo(codigoGuardado,bufferEscritura);
+				//cout << "como es fin de archivo imprimo el codigo " << codigoGuardado->bits << endl;
 			}
 		}
 	}
@@ -134,7 +137,7 @@ int LZ78::descomprimir(string archivoEntrada, string archivoSalida){
 		string primerCaracter = this->tabla.getString(*nuevoCodigo);
 		this->imprimirCadena(primerCaracter,bufferEscritura);
 
-		cout << "Primer código leído: " << nuevoCodigo->bits << endl;
+		//cout << "Primer código leído: " << nuevoCodigo->bits << endl;
 
 		stringSinTerminar = primerCaracter;
 //		cout << "Cadena a agregar: " << stringSinTerminar << ", mas algo " <<endl;;
@@ -144,11 +147,12 @@ int LZ78::descomprimir(string archivoEntrada, string archivoSalida){
 		cuantosLeer = this->tabla.getCantidadBitsTabla();
 		int maxValor = (pow(2.0,(int)(cuantosLeer)));
 		if(maxValor <= (this->tabla.getLastCode() + 1)){
+			cout << "Aumentado el codigo: " << cuantosLeer + 1 << endl;
 			cuantosLeer ++;
 		}
 		nuevoCodigo->tamanio = cuantosLeer;
 		bufferLectura->leer(nuevoCodigo);
-		cout << "código leído: " << nuevoCodigo->bits << endl;
+	//	cout << "código leído: " << nuevoCodigo->bits << endl;
 
 		//si el codigo que leo es el que todavia no termine de dar de alta
 		if (nuevoCodigo->bits == this->tabla.getLastCode()){

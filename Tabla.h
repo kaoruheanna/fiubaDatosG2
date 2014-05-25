@@ -10,6 +10,8 @@
 
 #include "InterfazTabla.h"
 #include <vector>
+#include <map>
+using namespace std;
 
 class Tabla : public InterfazTabla{
 public:
@@ -32,6 +34,7 @@ protected:
 	virtual void ImprimirEn(ostream& out) const;
 private:
 	int lastCode;
+	map<string,int>* mapa;
 	size_t cantidadBitsTabla;
 	vector<string>* tabla;
 };
