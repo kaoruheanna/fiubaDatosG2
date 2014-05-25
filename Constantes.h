@@ -9,7 +9,7 @@
 #define CONSTANTES_H_
 
 //El tamanio del buffer expresado en bytes
-#define TAMANIO_BUFFER 4
+#define TAMANIO_BUFFER 1048576
 #define TAMANIO_BYTE 8
 
 #endif /* CONSTANTES_H_ */

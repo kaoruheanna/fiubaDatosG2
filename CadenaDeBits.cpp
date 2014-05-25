@@ -32,7 +32,7 @@ CadenaDeBits::~CadenaDeBits() {
 
 void CadenaDeBits::serializar(void* output, short index) const{
 	char *outputString = (char*)output;
-	cout << "entra " << outputString << endl;
+	//cout << "entra " << outputString << endl;
 
 	unsigned long aux = 0;
 	unsigned long auxBits = this->bits;
