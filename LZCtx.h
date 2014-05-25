@@ -18,10 +18,13 @@
 #include <iostream>
 #include <fstream>
 
-class LZContextos: public Compresor {
+class LZCtx: public Compresor {
 public:
-	LZContextos();
-	virtual ~LZContextos();
+	LZCtx();
+	virtual ~LZCtx();
+	virtual int comprimir(string archivoEntrada, string archivoSalida);
+	virtual int descomprimir(string archivoEntrada, string archivoSalida);
+
 
 private:
 	TablaDeContextos tabla;

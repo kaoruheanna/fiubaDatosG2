@@ -5,18 +5,18 @@
  *      Author: kaoru
  */
 
-#include "LZContextos.h"
+#include "LZCtx.h"
 
-LZContextos::LZContextos() {
+LZCtx::LZCtx() {
 	// TODO Auto-generated constructor stub
 
 }
 
-LZContextos::~LZContextos() {
+LZCtx::~LZCtx() {
 	// TODO Auto-generated destructor stub
 }
 
-int LZ78::comprimir(string archivoEntrada, string archivoSalida){
+int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER, true);
 	BufferEscritura* bufferEscritura = new BufferEscritura(TAMANIO_BUFFER, true);
 	bufferLectura->crearStream(archivoEntrada);
@@ -56,7 +56,7 @@ int LZ78::comprimir(string archivoEntrada, string archivoSalida){
 
 			this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
 			this->tabla.agregarString(nuevoString);
-			this->tabla.setContexto(charLeidoAnterior);
+			this->tabla.setContexto(charLeidoAnterior.at(0));
 			stringLeido = "";
 		} else {
 			this->tabla.getBits(nuevoString,codigoGuardado);
@@ -67,9 +67,12 @@ int LZ78::comprimir(string archivoEntrada, string archivoSalida){
 			charLeido = cadenaLeida->getAsChar();
 
 			if (bufferLectura->esFinDeArchivo()){
-				this->imprimirCodigo(codigoGuardado,bufferEscritura);
-				cout << "como es fin de archivo imprimo el codigo " << codigoGuardado->bits << endl;
+				this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
+				codigoTipoEscritura->bits = CODIGO_LITERAL;
+				this->setCadenaFromChar(codigoGuardado,charLeido.at(0));
+				this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
 			}
+
 		}
 	}
 
@@ -80,14 +83,18 @@ int LZ78::comprimir(string archivoEntrada, string archivoSalida){
 	return 0;
 }
 
-void LZContextos::imprimirCodigo(CadenaDeBits* tipo,CadenaDeBits* codigo, BufferEscritura* bufferEscritura){
+int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
+	return 0;
+}
+
+void LZCtx::imprimirCodigo(CadenaDeBits* tipo,CadenaDeBits* codigo, BufferEscritura* bufferEscritura){
 	bufferEscritura->escribir(tipo);
 	bufferEscritura->escribir(codigo);
 	cout << "ESCRIBO: " << tipo->bits << " " << codigo->bits << endl;
 }
 
 
-void LZContextos::setCadenaFromChar(CadenaDeBits* cadena, char caracter){
+void LZCtx::setCadenaFromChar(CadenaDeBits* cadena, char caracter){
 	cadena->tamanio = TAMANIO_BYTE;
 	cadena->bits = (int)caracter;
 }
