@@ -11,5 +11,8 @@
 //El tamanio del buffer expresado en bytes
 #define TAMANIO_BUFFER 4
 #define TAMANIO_BYTE 8
+#define CODIGO_LITERAL 1
+#define CODIGO_CONTEXTO 0
+#define TAMANIO_TIPO_CODIGO 1
 
 #endif /* CONSTANTES_H_ */

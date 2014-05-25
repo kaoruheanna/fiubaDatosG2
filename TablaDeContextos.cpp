@@ -8,24 +8,24 @@
 #include "TablaDeContextos.h"
 
 TablaDeContextos::TablaDeContextos() {
-//	char c;
-//	for (int codigo=0;codigo<256;codigo++){
-//		c = (char)codigo;
-//		this->mapaDeContextos[c] = new Tabla();
-//	}
-//	this->contexto = "";
+	char c;
+	for (int codigo=0;codigo<256;codigo++){
+		c = (char)codigo;
+		this->mapaDeContextos[c] = new Tabla();
+	}
+	this->contexto = "";
 }
 
 TablaDeContextos::~TablaDeContextos() {
-//	char c;
-//	for (int codigo=0;codigo<256;codigo++){
-//		c = (char)codigo;
-//		delete (this->mapaDeContextos[c]);
-//	}
+	char c;
+	for (int codigo=0;codigo<256;codigo++){
+		c = (char)codigo;
+		delete (this->mapaDeContextos[c]);
+	}
 }
 
 void TablaDeContextos::setContexto(char contexto){
-//	this->contexto = contexto;
+	this->contexto = contexto;
 }
 
 //string TablaDeContextos::getChar(CadenaDeBits cadenaDeBits){
@@ -41,5 +41,7 @@ void TablaDeContextos::setContexto(char contexto){
 //	}
 //	return "";
 //}
+
+
 
 
