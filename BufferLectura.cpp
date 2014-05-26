@@ -22,14 +22,18 @@ void BufferLectura::actualizarBuffer(){
 		_tamanioCurrentBuffer = _file->gcount();
 		_index = 0;
 		if((!esCompresion) && _file->eof()){
-			posFinDeArchivo = ((_tamanioCurrentBuffer * TAMANIO_BYTE) - 1);
-			unsigned char marcaFinDeArchivo = 1;
-			unsigned char aComparar = _buffer[_tamanioCurrentBuffer - 1];
-			while(((aComparar & marcaFinDeArchivo) == 0) && (marcaFinDeArchivo != 0)){
-				posFinDeArchivo --;
-				marcaFinDeArchivo <<= 1;
+			if(_tamanioCurrentBuffer == 0){
+				posFinDeArchivo = 0;
+			} else {
+				posFinDeArchivo = ((_tamanioCurrentBuffer * TAMANIO_BYTE) - 1);
+				unsigned char marcaFinDeArchivo = 1;
+				unsigned char aComparar = _buffer[_tamanioCurrentBuffer - 1];
+				while(((aComparar & marcaFinDeArchivo) == 0) && (marcaFinDeArchivo != 0)){
+					posFinDeArchivo --;
+					marcaFinDeArchivo <<= 1;
+				}
+	//			cout << " posFinDeArchivo: " << posFinDeArchivo << " tamnio de buffer: " << _tamanioCurrentBuffer << endl;
 			}
-//			cout << " posFinDeArchivo: " << posFinDeArchivo << " tamnio de buffer: " << _tamanioCurrentBuffer << endl;
 		}
 	}
 }

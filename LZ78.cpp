@@ -23,14 +23,14 @@ void LZ78::imprimirCadena(string cadena, BufferEscritura* bufferEscritura){
 		textIterator++;
 		paraGuardar->bits = (int)caracter;
 		bufferEscritura->escribir(paraGuardar);
-		cout << "ESCRIBO: " << caracter << endl;
+		//cout << "ESCRIBO: " << caracter << endl;
 	}
 	delete paraGuardar;
 }
 
 void LZ78::imprimirCodigo(CadenaDeBits* codigo, BufferEscritura* bufferEscritura){
 	bufferEscritura->escribir(codigo);
-	cout << "ESCRIBO: " << codigo->bits << endl;
+	//cout << "ESCRIBO: " << codigo->bits << endl;
 }
 
 void LZ78::imprimirTabla(string cadena){
@@ -69,6 +69,17 @@ int LZ78::comprimir(string archivoEntrada, string archivoSalida){
 		if (!(this->tabla.exists(nuevoString))){
 			this->imprimirCodigo(codigoGuardado,bufferEscritura);
 			this->tabla.agregarString(nuevoString);
+
+			if(this->tabla.hayQueLimpiar()){
+
+				this->tabla.obtenerCodigoLimpieza(codigoGuardado);
+				//cout << "Nuevo string sin terminar " << charLeido << endl;
+				//cout << "Codigo de limpieza de " << codigoGuardado->tamanio << " bits" << endl;
+				this->imprimirCodigo(codigoGuardado,bufferEscritura);
+				this->tabla.limpiar();
+				this->cargarTabla();
+			}
+
 //			this->imprimirTabla(nuevoString);
 			stringLeido = "";
 //			cout << "no la encuentro" << endl;
@@ -82,7 +93,10 @@ int LZ78::comprimir(string archivoEntrada, string archivoSalida){
 
 			if (bufferLectura->esFinDeArchivo()){
 				this->imprimirCodigo(codigoGuardado,bufferEscritura);
-				cout << "como es fin de archivo imprimo el codigo " << codigoGuardado->bits << endl;
+				nuevoString = charLeido;
+				this->tabla.getBits(nuevoString,codigoGuardado);
+				this->imprimirCodigo(codigoGuardado,bufferEscritura);
+				//cout << "como es fin de archivo imprimo el codigo " << codigoGuardado->bits << endl;
 			}
 		}
 	}
@@ -123,6 +137,7 @@ int LZ78::descomprimir(string archivoEntrada, string archivoSalida){
 	string stringSinTerminar = "";
 	string stringTerminado;
 	size_t cuantosLeer;
+	string primerCaracter;
 	string nuevoString;
 	CadenaDeBits *nuevoCodigo = new CadenaDeBits(0,0);
 
@@ -131,33 +146,50 @@ int LZ78::descomprimir(string archivoEntrada, string archivoSalida){
 		nuevoCodigo->tamanio = cuantosLeer;
 		bufferLectura->leer(nuevoCodigo);
 
-		string primerCaracter = this->tabla.getString(*nuevoCodigo);
+		primerCaracter = this->tabla.getString(*nuevoCodigo);
 		this->imprimirCadena(primerCaracter,bufferEscritura);
 
-		cout << "Primer código leído: " << nuevoCodigo->bits << endl;
+		//cout << "Primer código leído: " << nuevoCodigo->bits << endl;
 
 		stringSinTerminar = primerCaracter;
 //		cout << "Cadena a agregar: " << stringSinTerminar << ", mas algo " <<endl;;
 	}
-
+	//cout << "Primer caracter " << stringSinTerminar << endl;
 	while (!bufferLectura->esFinDeArchivo()){
 		cuantosLeer = this->tabla.getCantidadBitsTabla();
 		int maxValor = (pow(2.0,(int)(cuantosLeer)));
 		if(maxValor <= (this->tabla.getLastCode() + 1)){
+			//cout << "Leyendo codigos de " << cuantosLeer + 1 << "bits" << endl;
 			cuantosLeer ++;
 		}
 		nuevoCodigo->tamanio = cuantosLeer;
 		bufferLectura->leer(nuevoCodigo);
-		cout << "código leído: " << nuevoCodigo->bits << endl;
+	//	cout << "código leído: " << nuevoCodigo->bits << endl;
 
-		//si el codigo que leo es el que todavia no termine de dar de alta
-		if (nuevoCodigo->bits == this->tabla.getLastCode()){
+		if(this->tabla.esCodigoLimpieza(nuevoCodigo)){
+			this->tabla.limpiar();
+			this->cargarTabla();
+			//cout << "Limpiando tabla... " <<endl;
+			// Leo devuelta para determinar el primer caracter del nuevo string
+			cuantosLeer = this->tabla.getCantidadBitsTabla();
+			nuevoCodigo->tamanio = cuantosLeer;
+			bufferLectura->leer(nuevoCodigo);
+
+			primerCaracter = this->tabla.getString(*nuevoCodigo);
+			this->imprimirCadena(primerCaracter,bufferEscritura);
+
+			//cout << "Primer código leído: " << nuevoCodigo->bits << endl;
+
+			stringSinTerminar = primerCaracter;
+		} else if (nuevoCodigo->bits == this->tabla.getLastCode()){
+			//si el codigo que leo es el que todavia no termine de dar de alta
 //			cout << "Es una cadena que no está completa" << endl;
 			stringTerminado = this->completarCadena(stringSinTerminar);
 
 			this->imprimirCadena(stringTerminado,bufferEscritura);
 
 			this->tabla.agregarString(stringTerminado);
+
 //			this->imprimirTabla(stringTerminado);
 
 //			cout << "Agrego a la tabla: " << stringTerminado << endl;;
