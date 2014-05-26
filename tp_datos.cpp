@@ -40,6 +40,9 @@ int main(int argc, char **argv) {
 			}
 		}
 		LZ78 *lz78 = new LZ78();
+		long int timeStart;
+		long int timeEnd;
+		time(&timeStart);
 		if(esCompresion){
 			cout << "Comprimiendo: " << nombreEntrada << " a " << nombreSalida << endl;
 			lz78->comprimir(nombreEntrada,nombreSalida);
@@ -47,6 +50,8 @@ int main(int argc, char **argv) {
 			cout << "Desomprimiendo: " << nombreEntrada << " a " << nombreSalida << endl;
 			lz78->descomprimir(nombreEntrada,nombreSalida);
 		}
+		time(&timeEnd);
+		cout << "Tardo en segundos: " << (timeEnd - timeStart) << endl;
 		delete lz78;
 	}
 	return 0;

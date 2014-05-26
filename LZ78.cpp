@@ -73,8 +73,8 @@ int LZ78::comprimir(string archivoEntrada, string archivoSalida){
 			if(this->tabla.hayQueLimpiar()){
 
 				this->tabla.obtenerCodigoLimpieza(codigoGuardado);
-				cout << "Nuevo string sin terminar " << charLeido << endl;
-				cout << "Codigo de limpieza de " << codigoGuardado->tamanio << " bits" << endl;
+				//cout << "Nuevo string sin terminar " << charLeido << endl;
+				//cout << "Codigo de limpieza de " << codigoGuardado->tamanio << " bits" << endl;
 				this->imprimirCodigo(codigoGuardado,bufferEscritura);
 				this->tabla.limpiar();
 				this->cargarTabla();
@@ -154,12 +154,12 @@ int LZ78::descomprimir(string archivoEntrada, string archivoSalida){
 		stringSinTerminar = primerCaracter;
 //		cout << "Cadena a agregar: " << stringSinTerminar << ", mas algo " <<endl;;
 	}
-	cout << "Primer caracter " << stringSinTerminar << endl;
+	//cout << "Primer caracter " << stringSinTerminar << endl;
 	while (!bufferLectura->esFinDeArchivo()){
 		cuantosLeer = this->tabla.getCantidadBitsTabla();
 		int maxValor = (pow(2.0,(int)(cuantosLeer)));
 		if(maxValor <= (this->tabla.getLastCode() + 1)){
-			cout << "Leyendo codigos de " << cuantosLeer + 1 << "bits" << endl;
+			//cout << "Leyendo codigos de " << cuantosLeer + 1 << "bits" << endl;
 			cuantosLeer ++;
 		}
 		nuevoCodigo->tamanio = cuantosLeer;
@@ -169,7 +169,7 @@ int LZ78::descomprimir(string archivoEntrada, string archivoSalida){
 		if(this->tabla.esCodigoLimpieza(nuevoCodigo)){
 			this->tabla.limpiar();
 			this->cargarTabla();
-			cout << "Limpiando tabla... " <<endl;
+			//cout << "Limpiando tabla... " <<endl;
 			// Leo devuelta para determinar el primer caracter del nuevo string
 			cuantosLeer = this->tabla.getCantidadBitsTabla();
 			nuevoCodigo->tamanio = cuantosLeer;

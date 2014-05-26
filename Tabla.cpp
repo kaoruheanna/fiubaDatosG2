@@ -7,6 +7,7 @@
 
 #include "Tabla.h"
 #include <math.h>
+#include "Constantes.h"
 
 Tabla::Tabla() {
 	this->cantidadBitsTabla = 2;
@@ -28,7 +29,7 @@ CadenaDeBits Tabla::agregarString(string cadena){
 	int maxValor = (pow(2.0,(int)(this->cantidadBitsTabla)));
 	if(this->lastCode >= maxValor){
 		this->cantidadBitsTabla++;
-		cout << "Aumentado el codigo: " << cantidadBitsTabla << endl;
+		//cout << "Aumentado el codigo: " << cantidadBitsTabla << endl;
 	}
 	return toReturn;
 }
@@ -85,7 +86,7 @@ void Tabla::limpiar(){
 }
 
 bool Tabla::hayQueLimpiar(){
-	return (this->cantidadBitsTabla >= 10);
+	return (this->cantidadBitsTabla >= (TAMANIO_MAX_BITS_TABLA + 1));
 }
 
 size_t Tabla::getCantidadBitsTabla(){
