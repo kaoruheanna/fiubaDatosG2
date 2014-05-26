@@ -44,7 +44,7 @@ CadenaDeBits Tabla::agregarString(string cadena){
 //}
 
 void Tabla::getBits(string cadena,CadenaDeBits* cadenaDeBits){
-	bool encontrado = false;
+//	bool encontrado = false;
 	/**unsigned int currentIndex = 0;
 	while((!encontrado) && (currentIndex < this->tabla->size())){
 		encontrado = (cadena.compare(this->tabla->at(currentIndex)) == 0);

@@ -28,7 +28,6 @@ public:
 
 protected:
 	virtual void ImprimirEn(ostream & out) const;
-	//virtual bool agregarCadenaATabla(string cadena);
 
 private:
 	Tabla tabla;
@@ -37,14 +36,9 @@ private:
 
 	string completarCadena(string cadena);
 	void cargarTabla();
-	//int getCodigoCadena(string cadena);
-	//string getCadenaCodigo(int codigo);
 	void imprimirCadena(string cadena, BufferEscritura* bufferEscritura);
 	void imprimirCodigo(CadenaDeBits* codigo, BufferEscritura* bufferEscritura);
 	void imprimirTabla(string cadena);
-//	string getNextChar();
-//	string getCurrentChar();
-//	bool isEndOfString();
 };
 
 #endif /* LZ78_H_ */
