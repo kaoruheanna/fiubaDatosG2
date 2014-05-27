@@ -30,9 +30,11 @@ protected:
 
 private:
 	TablaDeContextos tabla;
-
+	string completarCadena(string cadena);
 	void imprimirCodigo(CadenaDeBits* tipo,CadenaDeBits* codigo, BufferEscritura* bufferEscritura);
 	void setCadenaFromChar(CadenaDeBits* cadena, char caracter);
+	string getStringFromCode(int codigo);
+	void imprimirCadena(string cadena, BufferEscritura* bufferEscritura);
 };
 
 #endif /* LZCONTEXTOS_H_ */

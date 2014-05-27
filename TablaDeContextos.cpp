@@ -35,8 +35,6 @@ bool TablaDeContextos::exists(string cadena){
 	if (!this->tengoContexto()){
 		return false;
 	}
-	char contexto = this->contexto;
-	cout << "estoy en contexto " << contexto << " y busco " << cadena << endl;
 	Tabla* tabla = this->getTablaActual();
 	return tabla->exists(cadena);
 }
@@ -78,11 +76,15 @@ Tabla* TablaDeContextos::getTablaActual(){
 	return this->mapaDeContextos[this->contexto];
 }
 
-/**
- * to do
- */
 string TablaDeContextos::getString(CadenaDeBits bits){
-	return "";
+	if (!this->tengoContexto()){
+		cout << "quiero obtener el codigo y no tengo contexto" << endl;
+		throw "contexto vacio";
+		return "";
+	}
+	Tabla* tabla = this->getTablaActual();
+	string toReturn = tabla->getString(bits);
+	return toReturn;
 }
 
 /**
@@ -99,11 +101,12 @@ bool TablaDeContextos::hayQueLimpiar(){
 	return false;
 }
 
-/**
- * to do
- */
 size_t TablaDeContextos::getCantidadBitsTabla(){
-	return 0;
+	 return (this->mapaDeContextos[this->contexto]->getCantidadBitsTabla());
+}
+
+int TablaDeContextos::getLastCode(){
+	return (this->mapaDeContextos[this->contexto]->getLastCode());
 }
 
 

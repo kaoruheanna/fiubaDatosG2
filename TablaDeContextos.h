@@ -25,6 +25,7 @@ public:
 	virtual void limpiar();
 	virtual bool hayQueLimpiar();
 	virtual size_t getCantidadBitsTabla();
+	int getLastCode();
 
 private:
 	map<char,Tabla*> mapaDeContextos;
