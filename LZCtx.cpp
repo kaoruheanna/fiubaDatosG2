@@ -73,6 +73,7 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 			charLeidoAnterior = charLeido;
 			charLeido = cadenaLeida->getAsChar();
 
+
 			if (bufferLectura->esFinDeArchivo()){
 				cout << "2) el ultimo codigo que imprimo es: " <<codigoGuardado->bits<<endl;
 				this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
@@ -92,6 +93,7 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 	delete bufferEscritura;
 	delete cadenaLeida;
 	return 0;
+
 }
 
 int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
@@ -115,17 +117,20 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 //	int codigoSinTerminar;
 //
 //	//Leo el primer caracter (se que es un char), lo imprimo y seteo el contexto
-//	bufferLectura->leer(tipoCodigo);
-//	cuantosLeer = TAMANIO_BYTE;
-//	nuevoCodigo->tamanio = cuantosLeer;
-//	bufferLectura->leer(nuevoCodigo);
-//	nuevoString = this->getStringFromCode(nuevoCodigo->bits);
-//	this->imprimirCadena(nuevoString,bufferEscritura);
+//	if (!bufferLectura->esFinDeArchivo()){
+//		bufferLectura->leer(tipoCodigo);
+//		cuantosLeer = TAMANIO_BYTE;
+//		nuevoCodigo->tamanio = cuantosLeer;
+//		bufferLectura->leer(nuevoCodigo);
+//		nuevoString = this->getStringFromCode(nuevoCodigo->bits);
+//		this->imprimirCadena(nuevoString,bufferEscritura);
 //
-//	this->tabla.setContexto(nuevoString.at(0));
-//	contextoActual = nuevoString;
+//		this->tabla.setContexto(nuevoString.at(0));
+//		contextoActual = nuevoString;
 //
-//	cout << "Primer caracter :" << nuevoString << endl;
+//		cout << "Primer caracter :" << nuevoString << endl;
+//	}
+//
 //
 //	//A partir del segundo caracter:
 //	while (!bufferLectura->esFinDeArchivo()){
@@ -141,7 +146,7 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 //			int maxValor = (pow(2.0,(int)(cuantosLeer)));
 //			cout << maxValor<< endl;
 //			cout << paraAgregar.first.first << endl;
-//			if ((hayUnStringSinTerminar) && (maxValor <= (paraAgregar.first.first)+1)){
+//			if ((hayUnStringSinTerminar) && (maxValor <= (paraAgregar.first.first)+1)  && (contextoActual == paraAgregar.first.second )){
 //				cuantosLeer++;
 //			}
 //			cout << "Cant de bits" << cuantosLeer << endl;
@@ -156,7 +161,7 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 //			nuevoString = this->completarCadena(paraAgregar.second);
 //			this->tabla.setContexto(paraAgregar.first.second.at(0));
 //			this->tabla.agregarString(nuevoString);
-//			cout << "AGREGO " << nuevoString ;
+//			cout << "AGREGO " << nuevoString << endl;
 //			this->tabla.setContexto(nuevoString.at(0));
 //		}
 //		else{
@@ -168,20 +173,32 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 //			else{
 //				cout << "Es un valor de tabla "<< endl;
 //				nuevoString = this->tabla.getString(*nuevoCodigo);
+//				cout << "Es "<< nuevoString << endl;
 //			}
 //			if (hayUnStringSinTerminar){
+//				cout << "paraAgregar.second" << paraAgregar.second << endl;
+//				cout << "nuevoString.at(0)" << nuevoString.at(0) << endl;
 //				cout << "De la iteracion anterior hay que agregar ";
 //				stringTerminado = paraAgregar.second + nuevoString.at(0);
+//				cout << stringTerminado << endl;
 //				this->tabla.setContexto(paraAgregar.first.second.at(0));
 //				this->tabla.agregarString(stringTerminado);
-//				cout << "AGREGO " << stringTerminado ;
+//				cout << "AGREGO " << stringTerminado << endl;
 //				hayUnStringSinTerminar = false;
+//
+//				//borrar esto dsp
+//				CadenaDeBits *paraprueba = new CadenaDeBits();
+//				this->tabla.getBits(stringTerminado,paraprueba);
+//				cout << "con codigo " << paraprueba->bits << endl;
+//				cout << "que ocupa " << paraprueba->tamanio << endl;
+//				cout << "en contexto " << paraAgregar.first.second.at(0) << endl;
+//				delete paraprueba;
+//
 //			}
 //		}
 //		if (esUnLiteral){
 //			cout << "Agrego a la tabla "<< nuevoString << endl;
 //			this->tabla.agregarString(nuevoString);
-//			cout << "AGREGO " << nuevoString ;
 //			this->tabla.setContexto(nuevoString.at(0));
 //			contextoActual = nuevoString.at(0);
 //			this->imprimirCadena(nuevoString,bufferEscritura);
@@ -194,6 +211,7 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 //			stringSinTerminar = nuevoString;
 //			this->tabla.setContexto(contextoActual.at(0));
 //			codigoSinTerminar = this->tabla.getLastCode();
+//			cout << "codigoSinTerminar" << codigoSinTerminar << endl;
 //			paraAgregar.first.first = codigoSinTerminar;
 //			paraAgregar.second = stringSinTerminar;
 //			std::string::iterator it= --(nuevoString.end());
