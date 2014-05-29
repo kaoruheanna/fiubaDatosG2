@@ -109,6 +109,10 @@ int TablaDeContextos::getLastCode(){
 	return (this->mapaDeContextos[this->contexto]->getLastCode());
 }
 
+char TablaDeContextos::getContextoActual(){
+	return this->contexto;
+}
+
 
 
 

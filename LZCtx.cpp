@@ -97,133 +97,99 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 }
 
 int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
-//	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER, true);
-//	BufferEscritura* bufferEscritura = new BufferEscritura(TAMANIO_BUFFER, true);
-//	bufferLectura->crearStream(archivoEntrada);
-//	bufferEscritura->crearStream(archivoSalida);
-//
-//	CadenaDeBits *tipoCodigo = new CadenaDeBits(TAMANIO_TIPO_CODIGO,0);
-//	CadenaDeBits *nuevoCodigo = new CadenaDeBits(0,0);
-//	size_t cuantosLeer;
-//	string nuevoString;
-//	string contextoActual;
-//	string stringSinTerminar = "";
-//	string stringTerminado;
-//	bool hayUnStringSinTerminar = false;
-//	bool esUnLiteral;
-//	pair<pair<int,string>,string> paraAgregar;
-//	paraAgregar.first.first = 0;
-//	paraAgregar.second = "";
-//	int codigoSinTerminar;
-//
-//	//Leo el primer caracter (se que es un char), lo imprimo y seteo el contexto
-//	if (!bufferLectura->esFinDeArchivo()){
-//		bufferLectura->leer(tipoCodigo);
-//		cuantosLeer = TAMANIO_BYTE;
-//		nuevoCodigo->tamanio = cuantosLeer;
-//		bufferLectura->leer(nuevoCodigo);
-//		nuevoString = this->getStringFromCode(nuevoCodigo->bits);
-//		this->imprimirCadena(nuevoString,bufferEscritura);
-//
-//		this->tabla.setContexto(nuevoString.at(0));
-//		contextoActual = nuevoString;
-//
-//		cout << "Primer caracter :" << nuevoString << endl;
-//	}
-//
-//
-//	//A partir del segundo caracter:
-//	while (!bufferLectura->esFinDeArchivo()){
-//		bufferLectura->leer(tipoCodigo);
-//		cout << "TIPO CODIGO: " << tipoCodigo-> bits << endl;
-//		if (tipoCodigo->bits == CODIGO_LITERAL){
-//			cuantosLeer = TAMANIO_BYTE;
-//			esUnLiteral = true;
-//		}
-//		else {
-//			cuantosLeer = this->tabla.getCantidadBitsTabla();
-//			cout << "Cant de bits" << cuantosLeer << endl;
-//			int maxValor = (pow(2.0,(int)(cuantosLeer)));
-//			cout << maxValor<< endl;
-//			cout << paraAgregar.first.first << endl;
-//			if ((hayUnStringSinTerminar) && (maxValor <= (paraAgregar.first.first)+1)  && (contextoActual == paraAgregar.first.second )){
-//				cuantosLeer++;
-//			}
-//			cout << "Cant de bits" << cuantosLeer << endl;
-//			esUnLiteral = false;
-//		}
-//
-//		nuevoCodigo->tamanio = cuantosLeer;
-//		bufferLectura->leer(nuevoCodigo);
-//
-//		if (((int)nuevoCodigo->bits == paraAgregar.first.first) && (contextoActual == paraAgregar.first.second )){
-//			cout << "Es una cadena que no esta completa" << endl;
-//			nuevoString = this->completarCadena(paraAgregar.second);
-//			this->tabla.setContexto(paraAgregar.first.second.at(0));
-//			this->tabla.agregarString(nuevoString);
-//			cout << "AGREGO " << nuevoString << endl;
-//			this->tabla.setContexto(nuevoString.at(0));
-//		}
-//		else{
-//			if (esUnLiteral){
-//				cout << "Es un literal "<< endl;
-//				nuevoString = this->getStringFromCode(nuevoCodigo->bits);
-//				cout << nuevoString << endl;
-//			}
-//			else{
-//				cout << "Es un valor de tabla "<< endl;
-//				nuevoString = this->tabla.getString(*nuevoCodigo);
-//				cout << "Es "<< nuevoString << endl;
-//			}
-//			if (hayUnStringSinTerminar){
-//				cout << "paraAgregar.second" << paraAgregar.second << endl;
-//				cout << "nuevoString.at(0)" << nuevoString.at(0) << endl;
-//				cout << "De la iteracion anterior hay que agregar ";
-//				stringTerminado = paraAgregar.second + nuevoString.at(0);
-//				cout << stringTerminado << endl;
-//				this->tabla.setContexto(paraAgregar.first.second.at(0));
-//				this->tabla.agregarString(stringTerminado);
-//				cout << "AGREGO " << stringTerminado << endl;
-//				hayUnStringSinTerminar = false;
-//
-//				//borrar esto dsp
-//				CadenaDeBits *paraprueba = new CadenaDeBits();
-//				this->tabla.getBits(stringTerminado,paraprueba);
-//				cout << "con codigo " << paraprueba->bits << endl;
-//				cout << "que ocupa " << paraprueba->tamanio << endl;
-//				cout << "en contexto " << paraAgregar.first.second.at(0) << endl;
-//				delete paraprueba;
-//
-//			}
-//		}
-//		if (esUnLiteral){
-//			cout << "Agrego a la tabla "<< nuevoString << endl;
-//			this->tabla.agregarString(nuevoString);
-//			this->tabla.setContexto(nuevoString.at(0));
-//			contextoActual = nuevoString.at(0);
-//			this->imprimirCadena(nuevoString,bufferEscritura);
-//		}
-//		else{
-//			this->imprimirCadena(nuevoString,bufferEscritura);
-//			cout << "La prox iteracion voy a dar de alta "<< nuevoString << " mas algo" << endl;
-//			cout << "en el contexto" << contextoActual << endl;
-//			paraAgregar.first.second = contextoActual;
-//			stringSinTerminar = nuevoString;
-//			this->tabla.setContexto(contextoActual.at(0));
-//			codigoSinTerminar = this->tabla.getLastCode();
-//			cout << "codigoSinTerminar" << codigoSinTerminar << endl;
-//			paraAgregar.first.first = codigoSinTerminar;
-//			paraAgregar.second = stringSinTerminar;
-//			std::string::iterator it= --(nuevoString.end());
-//			this->tabla.setContexto(*it);
-//			contextoActual = *it;
-//			hayUnStringSinTerminar = true;
-//		}
-//	}
-//	delete bufferLectura;
-//	delete bufferEscritura;
-//	delete tipoCodigo;
-//	delete nuevoCodigo;
+	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER, true);
+	BufferEscritura* bufferEscritura = new BufferEscritura(TAMANIO_BUFFER, true);
+	bufferLectura->crearStream(archivoEntrada);
+	bufferEscritura->crearStream(archivoSalida);
+
+	CadenaDeBits *tipoCodigo = new CadenaDeBits(TAMANIO_TIPO_CODIGO,0);
+	CadenaDeBits *nuevoCodigo = new CadenaDeBits(0,0);
+	size_t cuantosLeer;
+	string nuevoString;
+	string contextoActual;
+	string stringSinTerminar = "";
+	string stringTerminado;
+	bool hayUnStringSinTerminar = false;
+	bool esUnLiteral;
+	int paraAgregarCodigo = 0;
+	string paraAgregarContexto = "";
+	string paraAgregarString = "";
+	int codigoSinTerminar;
+
+	//Leo el primer caracter (se que es un char), lo imprimo y seteo el contexto
+	if (!bufferLectura->esFinDeArchivo()){
+		bufferLectura->leer(tipoCodigo);
+		cuantosLeer = TAMANIO_BYTE;
+		nuevoCodigo->tamanio = cuantosLeer;
+		bufferLectura->leer(nuevoCodigo);
+		nuevoString = this->getStringFromCode(nuevoCodigo->bits);
+		this->imprimirCadena(nuevoString,bufferEscritura);
+		this->tabla.setContexto(nuevoString.at(0));
+	}
+
+	//A partir del segundo caracter:
+	while (!bufferLectura->esFinDeArchivo()){
+		bufferLectura->leer(tipoCodigo);
+		if (tipoCodigo->bits == CODIGO_LITERAL){
+			cuantosLeer = TAMANIO_BYTE;
+			esUnLiteral = true;
+		}
+		else {
+			cuantosLeer = this->tabla.getCantidadBitsTabla();
+			int maxValor = (pow(2.0,(int)(cuantosLeer)));
+			if ((hayUnStringSinTerminar) && (maxValor <= (paraAgregarCodigo)+1)  && (this->tabla.getContextoActual() == paraAgregarContexto.at(0))){
+				cuantosLeer++;
+			}
+			esUnLiteral = false;
+		}
+
+		nuevoCodigo->tamanio = cuantosLeer;
+		bufferLectura->leer(nuevoCodigo);
+
+		if (((int)nuevoCodigo->bits == paraAgregarCodigo) && (this->tabla.getContextoActual() == paraAgregarContexto.at(0))){
+			cout << "Es una cadena que no esta completa" << endl;
+			nuevoString = this->completarCadena(paraAgregarString);
+			this->tabla.setContexto(paraAgregarContexto.at(0));
+			this->tabla.agregarString(nuevoString);
+			this->tabla.setContexto(nuevoString.at(0));
+		}
+		else{
+			if (esUnLiteral){
+				nuevoString = this->getStringFromCode(nuevoCodigo->bits);
+			}
+			else{
+				nuevoString = this->tabla.getString(*nuevoCodigo);
+			}
+			if (hayUnStringSinTerminar){
+				stringTerminado = paraAgregarString + nuevoString.at(0);
+				contextoActual = this->tabla.getContextoActual();
+				this->tabla.setContexto(paraAgregarContexto.at(0));
+				this->tabla.agregarString(stringTerminado);
+				this->tabla.setContexto(contextoActual.at(0));
+				hayUnStringSinTerminar = false;
+			}
+		}
+		if (esUnLiteral){
+			this->tabla.agregarString(nuevoString);
+			this->tabla.setContexto(nuevoString.at(0));
+			this->imprimirCadena(nuevoString,bufferEscritura);
+		}
+		else{
+			this->imprimirCadena(nuevoString,bufferEscritura);
+			paraAgregarContexto = this->tabla.getContextoActual();
+			stringSinTerminar = nuevoString;
+			codigoSinTerminar = this->tabla.getLastCode();
+			paraAgregarCodigo = codigoSinTerminar;
+			paraAgregarString = stringSinTerminar;
+			std::string::iterator it= --(nuevoString.end());
+			this->tabla.setContexto(*it);
+			hayUnStringSinTerminar = true;
+		}
+	}
+	delete bufferLectura;
+	delete bufferEscritura;
+	delete tipoCodigo;
+	delete nuevoCodigo;
 	return 0;
 }
 
