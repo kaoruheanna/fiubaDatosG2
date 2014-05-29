@@ -107,14 +107,12 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 	size_t cuantosLeer;
 	string nuevoString;
 	string contextoActual;
-	string stringSinTerminar = "";
 	string stringTerminado;
 	bool hayUnStringSinTerminar = false;
 	bool esUnLiteral;
 	int paraAgregarCodigo = 0;
 	string paraAgregarContexto = "";
 	string paraAgregarString = "";
-	int codigoSinTerminar;
 
 	//Leo el primer caracter (se que es un char), lo imprimo y seteo el contexto
 	if (!bufferLectura->esFinDeArchivo()){
@@ -177,10 +175,8 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 		else{
 			this->imprimirCadena(nuevoString,bufferEscritura);
 			paraAgregarContexto = this->tabla.getContextoActual();
-			stringSinTerminar = nuevoString;
-			codigoSinTerminar = this->tabla.getLastCode();
-			paraAgregarCodigo = codigoSinTerminar;
-			paraAgregarString = stringSinTerminar;
+			paraAgregarCodigo = this->tabla.getLastCode();
+			paraAgregarString = nuevoString;
 			std::string::iterator it= --(nuevoString.end());
 			this->tabla.setContexto(*it);
 			hayUnStringSinTerminar = true;
