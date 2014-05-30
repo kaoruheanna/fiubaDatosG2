@@ -96,9 +96,84 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 
 }
 
+//int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
+//	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER, true);
+//	BufferEscritura* bufferEscritura = new BufferEscritura(TAMANIO_BUFFER, true);
+//	bufferLectura->crearStream(archivoEntrada);
+//	bufferEscritura->crearStream(archivoSalida);
+//
+//	string stringLeido = "";
+//	string charLeido = "";
+//	string charLeidoAnterior = "";
+//	bool esPrimerCaracter = false;
+//	CadenaDeBits *codigoGuardado = new CadenaDeBits();
+//	CadenaDeBits *codigoTipoEscritura = new CadenaDeBits();
+//	codigoTipoEscritura->tamanio = TAMANIO_TIPO_CODIGO;
+//	CadenaDeBits *cadenaLeida = new CadenaDeBits();
+////	bool faltaImprimir = false;
+//
+//	if (!bufferLectura->esFinDeArchivo()){
+//		bufferLectura->leer(cadenaLeida);
+////		faltaImprimir = true;
+//		charLeido = cadenaLeida->getAsChar();
+////		esPrimerCaracter = true;
+//		codigoTipoEscritura->bits = CODIGO_LITERAL;
+//		this->setCadenaFromChar(codigoGuardado,charLeido.at(0));
+//		cout << "imprimo el primer caracter que viene" << endl;
+//		this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
+//		this->tabla.setContexto(charLeido.at(0));
+//	}
+//
+//	while (!bufferLectura->esFinDeArchivo()){
+////		charLeidoAnterior = charLeido;
+//		bufferLectura->leer(cadenaLeida);
+//		charLeido = cadenaLeida->getAsChar();
+//		cout << "lei el caracter: '"<<charLeido<<"'"<<endl;
+//		string nuevoString = stringLeido+charLeido;
+//
+//		cout<<"busco nuevoString: '"<<nuevoString<<"'";
+//		cout<<" en contexto: '"<<this->tabla.getContextoActual()<<"'"<<endl;
+//
+//		if (!(this->tabla.exists(nuevoString))){
+//
+//			//si no lo encuentro en la tabla tengo que imprimir
+//			bool esUnSoloCaracter = (nuevoString.length() == 1);
+//
+//			if (esUnSoloCaracter){
+//				//si tengo un solo caracter y no lo encontre en la tabla uso el codigo del literal
+//				codigoTipoEscritura->bits = CODIGO_LITERAL;
+//				this->setCadenaFromChar(codigoGuardado,charLeido.at(0));
+//			}
+//
+//			this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
+//			stringLeido = "";
+//			this->tabla.agregarString(nuevoString);
+//			cout<<"Agrego '"<<nuevoString <<"' en el contexto '"<<this->tabla.getContextoActual()<<"'"<<endl;
+//			this->tabla.setContexto(charLeido.at(0));
+//			cout<<"seteo el nuevo contexto:'"<<charLeido.at(0)<<"'"<<endl;
+//
+//
+//		} else {
+//
+//			//si lo encuentro en la tabla guardo el codigo.
+//			this->tabla.getBits(nuevoString,codigoGuardado);
+//			codigoTipoEscritura->bits = CODIGO_CONTEXTO;
+//			//y me guardo el string que llevo leido hasta el momento
+//			stringLeido = nuevoString;
+//		}
+//	}
+//
+//	delete codigoGuardado;
+//	delete bufferLectura;
+//	delete bufferEscritura;
+//	delete cadenaLeida;
+//	return 0;
+//
+//}
+
 int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
-	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER, true);
-	BufferEscritura* bufferEscritura = new BufferEscritura(TAMANIO_BUFFER, true);
+	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER, false);
+	BufferEscritura* bufferEscritura = new BufferEscritura(TAMANIO_BUFFER, false);
 	bufferLectura->crearStream(archivoEntrada);
 	bufferEscritura->crearStream(archivoSalida);
 
@@ -114,15 +189,19 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 	string paraAgregarContexto = "";
 	string paraAgregarString = "";
 
+	/* ANALIZAR EL CASO DE ARCHIVO VACIO */
+
 	//Leo el primer caracter (se que es un char), lo imprimo y seteo el contexto
 	if (!bufferLectura->esFinDeArchivo()){
 		bufferLectura->leer(tipoCodigo);
-		cuantosLeer = TAMANIO_BYTE;
-		nuevoCodigo->tamanio = cuantosLeer;
-		bufferLectura->leer(nuevoCodigo);
-		nuevoString = this->getStringFromCode(nuevoCodigo->bits);
-		this->imprimirCadena(nuevoString,bufferEscritura);
-		this->tabla.setContexto(nuevoString.at(0));
+		if (tipoCodigo->bits == CODIGO_LITERAL){
+			cuantosLeer = TAMANIO_BYTE;
+			nuevoCodigo->tamanio = cuantosLeer;
+			bufferLectura->leer(nuevoCodigo);
+			nuevoString = this->getStringFromCode(nuevoCodigo->bits);
+			this->imprimirCadena(nuevoString,bufferEscritura);
+			this->tabla.setContexto(nuevoString.at(0));
+		}
 	}
 
 	//A partir del segundo caracter:
@@ -192,7 +271,7 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 void LZCtx::imprimirCodigo(CadenaDeBits* tipo,CadenaDeBits* codigo, BufferEscritura* bufferEscritura){
 	bufferEscritura->escribir(tipo);
 	bufferEscritura->escribir(codigo);
-	cout << "ESCRIBO: " << tipo->bits << " " << codigo->tamanio << " " << codigo->bits << endl;
+	cout << "ESCRIBO: " << tipo->bits << ", y uso " << codigo->tamanio << " bits para el codigo " << codigo->bits << endl;
 }
 
 void LZCtx::imprimirCadena(string cadena, BufferEscritura* bufferEscritura){
