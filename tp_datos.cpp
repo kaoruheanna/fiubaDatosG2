@@ -18,7 +18,7 @@
 
 using namespace std;
 
-int main(int argc, char **argv) {
+int ejecucionPorConsola(int argc, char **argv){
 	if((argc != 3) || !((strcmp(argv[1], "-c") == 0) || (strcmp(argv[1], "-d") == 0))){
 		// Imprimir ayuda
 		cout << "Los parametros son incorrectos." << endl;
@@ -40,8 +40,14 @@ int main(int argc, char **argv) {
 				return 0;
 			}
 		}
-		//Compresor *compresor = new LZ78();
-		Compresor *compresor = new LZCtx();
+
+		Compresor *compresor;
+		if (LZ_CONTEXTOS){
+			compresor = new LZCtx();
+		} else {
+			compresor = new LZ78();
+		}
+
 		long int timeStart;
 		long int timeEnd;
 		time(&timeStart);
@@ -58,3 +64,52 @@ int main(int argc, char **argv) {
 	}
 	return 0;
 }
+
+int ejecucionModoDebug(bool esCompresion){
+	string aComprimir = "debug_entrada.txt";
+	string comprimido = "debug_comprimido.txt.13";
+	string descomprimido = "debug_salida.txt";
+	string nombreEntrada = "";
+	string nombreSalida = "";
+
+	if(esCompresion) {
+		nombreEntrada = aComprimir;
+		nombreSalida = comprimido;
+	} else {
+		nombreEntrada = comprimido;
+		nombreSalida = descomprimido;
+	}
+
+	Compresor *compresor;
+	if (LZ_CONTEXTOS){
+		compresor = new LZCtx();
+	} else {
+		compresor = new LZ78();
+	}
+
+	long int timeStart;
+	long int timeEnd;
+	time(&timeStart);
+	if(esCompresion){
+		cout << "Comprimiendo: " << nombreEntrada << " a " << nombreSalida << endl;
+		compresor->comprimir(nombreEntrada,nombreSalida);
+	} else {
+		cout << "Desomprimiendo: " << nombreEntrada << " a " << nombreSalida << endl;
+		compresor->descomprimir(nombreEntrada,nombreSalida);
+	}
+	time(&timeEnd);
+	cout << "Tardo en segundos: " << (timeEnd - timeStart) << endl;
+	delete compresor;
+
+	return 0;
+}
+
+int main(int argc, char **argv) {
+	if (MODO_DEBUG){
+		bool esCompresion = true;
+		return ejecucionModoDebug(esCompresion);
+	} else {
+		return ejecucionPorConsola(argc,argv);
+	}
+}
+
