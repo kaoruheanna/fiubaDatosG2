@@ -87,6 +87,7 @@ int ejecucionModoDebug(bool esCompresion){
 		compresor = new LZ78();
 	}
 
+
 	long int timeStart;
 	long int timeEnd;
 	time(&timeStart);
