@@ -321,3 +321,7 @@ string LZCtx::completarCadena(string cadena){
 	return cadena;
 }
 
+
+
+
+
