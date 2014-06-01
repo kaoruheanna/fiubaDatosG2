@@ -42,8 +42,9 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 		cout << "char leido: " << charLeido << endl;
 		string nuevoString = stringLeido+charLeido;
 		if (!(this->tabla.exists(nuevoString))){
+			bool esUnicoCaracter = (nuevoString.length() == 1);
 			//si tengo un solo caracter
-			if (nuevoString.length() == 1){
+			if (esUnicoCaracter){
 				codigoTipoEscritura->bits = CODIGO_LITERAL;
 				this->setCadenaFromChar(codigoGuardado,charLeido.at(0));
 				bufferLectura->leer(cadenaLeida);
@@ -61,6 +62,11 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 			stringLeido = "";
 
 			if (bufferLectura->esFinDeArchivo()){
+				if (esUnicoCaracter){
+					codigoTipoEscritura->bits = CODIGO_LITERAL;
+					this->setCadenaFromChar(codigoGuardado,charLeido.at(0));
+					this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
+				}
 				cout << "1) el ultimo codigo que imprimo es: " <<codigoGuardado->bits<<endl;
 			}
 
@@ -78,11 +84,11 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 				cout << "2) el ultimo codigo que imprimo es: " <<codigoGuardado->bits<<endl;
 				this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
 
-//				codigoTipoEscritura->bits = CODIGO_LITERAL;
-//				this->setCadenaFromChar(codigoGuardado,charLeido.at(0));
-//				cout << "EL ULTIMO QUE PONGO ES: " << charLeido << " " << codigoGuardado->bits << endl;
-//				this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
-//				cout << "ya no deberia imprimir nada mas (excepto el fin de archivo)" << endl;
+				codigoTipoEscritura->bits = CODIGO_LITERAL;
+				this->setCadenaFromChar(codigoGuardado,charLeido.at(0));
+				cout << "EL ULTIMO QUE PONGO ES: " << charLeido << " " << codigoGuardado->bits << endl;
+				this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
+				cout << "ya no deberia imprimir nada mas (excepto el fin de archivo)" << endl;
 			}
 		}
 		esPrimerCaracter = false;
@@ -217,6 +223,7 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 			if ((hayUnStringSinTerminar) && (maxValor <= (paraAgregarCodigo)+1)  && (this->tabla.getContextoActual() == paraAgregarContexto.at(0))){
 				cuantosLeer++;
 			}
+			cout << "cantidad de bits a leer: " << cuantosLeer << endl;
 			esUnLiteral = false;
 		}
 
