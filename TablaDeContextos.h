@@ -27,6 +27,7 @@ public:
 	virtual size_t getCantidadBitsTabla();
 	int getLastCode();
 	char getContextoActual();
+	void Imprimir(ostream& out);
 
 private:
 	map<char,Tabla*> mapaDeContextos;

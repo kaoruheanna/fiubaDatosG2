@@ -43,7 +43,12 @@ bool TablaDeContextos::exists(string cadena){
  * to do
  */
 bool TablaDeContextos::exists(CadenaDeBits bits){
-	return false;
+	if (!this->tengoContexto()){
+		cout << "quiero agregar y no tengo contexto" << endl;
+		throw "contexto vacio";
+	}
+	Tabla* tabla = this->getTablaActual();
+	return tabla->exists(bits);
 }
 
 CadenaDeBits TablaDeContextos::agregarString(string cadena){
@@ -113,6 +118,8 @@ char TablaDeContextos::getContextoActual(){
 	return this->contexto;
 }
 
-
+void TablaDeContextos::Imprimir(ostream& out){
+	this->getTablaActual()->Imprimir(out);
+}
 
 
