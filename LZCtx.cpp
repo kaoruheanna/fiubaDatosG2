@@ -192,6 +192,8 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 	string stringTerminado;
 	bool hayUnStringSinTerminar = false;
 	bool esUnLiteral;
+	bool casoEspecial = false;
+	string contextoEspecial;
 	int paraAgregarCodigo = 0;
 	string paraAgregarContexto = "";
 	string paraAgregarString = "";
@@ -237,6 +239,8 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 			this->tabla.setContexto(paraAgregarContexto.at(0));
 			this->tabla.agregarString(nuevoString);
 			this->tabla.setContexto(nuevoString.at(0));
+			casoEspecial = true;
+			contextoEspecial = paraAgregarContexto.at(0);
 		}
 		else{
 			if (esUnLiteral){
@@ -262,6 +266,10 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 		else{
 			this->imprimirCadena(nuevoString,bufferEscritura);
 			paraAgregarContexto = this->tabla.getContextoActual();
+			if (casoEspecial){
+				paraAgregarContexto = contextoEspecial;
+			}
+			casoEspecial = false;
 			paraAgregarCodigo = this->tabla.getLastCode();
 			paraAgregarString = nuevoString;
 			this->tabla.setContexto(nuevoString.at(nuevoString.length()-1));
