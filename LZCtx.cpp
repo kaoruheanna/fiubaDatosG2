@@ -23,8 +23,9 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 	bufferEscritura->crearStream(archivoSalida);
 
 	string stringLeido = "";
-	string charLeido = "";
-	string charLeidoAnterior = "";
+//	string charLeido = "";
+	char charLeido, charLeidoAnterior;
+//	string charLeidoAnterior = "";
 	bool esPrimerCaracter = false;
 	CadenaDeBits *codigoGuardado = new CadenaDeBits();
 	CadenaDeBits *codigoTipoEscritura = new CadenaDeBits();
@@ -46,7 +47,7 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 			//si tengo un solo caracter
 			if (esUnicoCaracter){
 				codigoTipoEscritura->bits = CODIGO_LITERAL;
-				this->setCadenaFromChar(codigoGuardado,charLeido.at(0));
+				this->setCadenaFromChar(codigoGuardado,charLeido);
 				bufferLectura->leer(cadenaLeida);
 				charLeidoAnterior = charLeido;
 				charLeido = cadenaLeida->getAsChar();
@@ -58,13 +59,13 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 			if (!esPrimerCaracter){
 				this->tabla.agregarString(nuevoString);
 			}
-			this->tabla.setContexto(charLeidoAnterior.at(0));
+			this->tabla.setContexto(charLeidoAnterior);
 			stringLeido = "";
 
 			if (bufferLectura->esFinDeArchivo()){
 				if (esUnicoCaracter){
 					codigoTipoEscritura->bits = CODIGO_LITERAL;
-					this->setCadenaFromChar(codigoGuardado,charLeido.at(0));
+					this->setCadenaFromChar(codigoGuardado,charLeido);
 					this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
 				}
 				cout << "1) el ultimo codigo que imprimo es: " <<codigoGuardado->bits<<endl;
@@ -85,7 +86,7 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 				this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
 
 				codigoTipoEscritura->bits = CODIGO_LITERAL;
-				this->setCadenaFromChar(codigoGuardado,charLeido.at(0));
+				this->setCadenaFromChar(codigoGuardado,charLeido);
 				cout << "EL ULTIMO QUE PONGO ES: " << charLeido << " " << codigoGuardado->bits << endl;
 				this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
 				cout << "ya no deberia imprimir nada mas (excepto el fin de archivo)" << endl;
@@ -298,8 +299,9 @@ void LZCtx::imprimirCadena(string cadena, BufferEscritura* bufferEscritura){
 
 
 void LZCtx::setCadenaFromChar(CadenaDeBits* cadena, char caracter){
+	unsigned char caracterAux = (unsigned char)caracter;
 	cadena->tamanio = TAMANIO_BYTE;
-	cadena->bits = (int)caracter;
+	cadena->bits = (unsigned int)caracterAux;
 }
 
 string LZCtx::getStringFromCode(int codigo){
