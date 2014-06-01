@@ -46,7 +46,7 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 	}
 
 	while ( (!bufferLectura->esFinDeArchivo()) || esPrimerCaracter){
-		cout << "char leido: " << charLeido << endl;
+		//cout << "char leido: " << charLeido << endl;
 		string nuevoString = stringLeido+charLeido;
 		if (!(this->tabla.exists(nuevoString) || (nuevoString.length() == 1))){
 			/*bool esUnicoCaracter = (nuevoString.length() == 1);
@@ -64,6 +64,7 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 			//si es el primer caracter no lo guardo
 			/*if (!esPrimerCaracter){*/
 				this->tabla.agregarString(nuevoString);
+				cout << "Contexto: " << this->tabla.getContextoActual() <<" Agrego: " << nuevoString << endl;
 			/*}*/
 			this->tabla.setContexto(charLeidoAnterior);
 			stringLeido = "";
@@ -74,11 +75,11 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 					this->setCadenaFromChar(codigoGuardado,charLeido);
 					this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
 				}*/
-				cout << "1) el ultimo codigo que imprimo es: " <<codigoGuardado->bits<<endl;
+				//cout << "1) el ultimo codigo que imprimo es: " <<codigoGuardado->bits<<endl;
 			}
 
 		} else {
-			cout << "nuevoString: " << nuevoString << endl;
+			//cout << "nuevoString: " << nuevoString << endl;
 			if(nuevoString.length() == 1){
 				this->setCadenaFromChar(codigoGuardado,nuevoString.at(0));
 				codigoTipoEscritura->bits = CODIGO_LITERAL;
@@ -93,14 +94,14 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 
 
 			if (bufferLectura->esFinDeArchivo()){
-				cout << "2) el ultimo codigo que imprimo es: " <<codigoGuardado->bits<<endl;
+//				cout << "2) el ultimo codigo que imprimo es: " <<codigoGuardado->bits<<endl;
 				this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
 
 				codigoTipoEscritura->bits = CODIGO_LITERAL;
 				this->setCadenaFromChar(codigoGuardado,charLeido);
-				cout << "EL ULTIMO QUE PONGO ES: " << charLeido << " " << codigoGuardado->bits << endl;
+	//			cout << "EL ULTIMO QUE PONGO ES: " << charLeido << " " << codigoGuardado->bits << endl;
 				this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
-				cout << "ya no deberia imprimir nada mas (excepto el fin de archivo)" << endl;
+		//		cout << "ya no deberia imprimir nada mas (excepto el fin de archivo)" << endl;
 			}
 		}
 		esPrimerCaracter = false;
@@ -217,8 +218,8 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 			this->imprimirCadena(nuevoString,bufferEscritura);
 			this->tabla.setContexto(nuevoString.at(0));
 			contextoActual = nuevoString.at(0);
-			cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
-			cout << "Leido un char: " << nuevoString << endl;
+			//cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
+			//cout << "Leido un char: " << nuevoString << endl;
 		}
 		bufferLectura->leer(tipoCodigo);
 	}
@@ -228,8 +229,8 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 			nuevoCodigo->tamanio = tamanioALeer;
 			bufferLectura->leer(nuevoCodigo);
 			descompresion = this->getStringFromCode(nuevoCodigo->bits);
-			cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
-			cout << "Leido un char: " << descompresion << endl;
+			//cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
+			//cout << "Leido un char: " << descompresion << endl;
 		} else { // Leo un codigo de tabla
 			tamanioALeer = this->tabla.getCantidadBitsTabla();
 			int maxValor = (pow(2.0,(int)(tamanioALeer)));
@@ -239,21 +240,21 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 			}
 			nuevoCodigo->tamanio = tamanioALeer;
 			bufferLectura->leer(nuevoCodigo);
-			cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
-			cout << "Leido codigo: " << nuevoCodigo->bits << endl;
-			this->tabla.Imprimir(cout);
+			//cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
+			//cout << "Leido codigo: " << nuevoCodigo->bits << endl;
+			//this->tabla.Imprimir(cout);
 			if(this->tabla.exists(*nuevoCodigo)){
-				cout << "String Existia! " << endl;
+				//cout << "String Existia! " << endl;
 				descompresion = this->tabla.getString(*nuevoCodigo);
 			} else {
 				descompresion = this->completarCadena(nuevoString);
-				cout << "String no existia" << endl;
-				cout << "Contexto: " << contextoActual <<" Agrego: " << nuevoString << endl;
-				this->tabla.agregarString(nuevoString);
+				//cout << "String no existia" << endl;
+				cout << "Contexto: " << contextoActual <<" Agrego: " << descompresion << endl;
+				this->tabla.agregarString(descompresion);
 			}
-			cout << "Leido un string: " << descompresion << endl;
+			//cout << "Leido un string: " << descompresion << endl;
 		}
-		cout << "Escribo: " << descompresion << endl;
+		//cout << "Escribo: " << descompresion << endl;
 		this->imprimirCadena(descompresion,bufferEscritura);
 		if(esPrimerChar){ // Caso especial: sin contexto anterior
 			esPrimerChar = false;
@@ -282,7 +283,7 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 void LZCtx::imprimirCodigo(CadenaDeBits* tipo,CadenaDeBits* codigo, BufferEscritura* bufferEscritura){
 	bufferEscritura->escribir(tipo);
 	bufferEscritura->escribir(codigo);
-	cout << "ESCRIBO: " << tipo->bits << ", y uso " << codigo->tamanio << " bits para el codigo " << codigo->bits << endl;
+	//cout << "ESCRIBO: " << tipo->bits << ", y uso " << codigo->tamanio << " bits para el codigo " << codigo->bits << endl;
 }
 
 void LZCtx::imprimirCadena(string cadena, BufferEscritura* bufferEscritura){
@@ -295,7 +296,7 @@ void LZCtx::imprimirCadena(string cadena, BufferEscritura* bufferEscritura){
 		textIterator++;
 		paraGuardar->bits = (int)caracter;
 		bufferEscritura->escribir(paraGuardar);
-		cout << "ESCRIBO: " << caracter << endl;
+		//cout << "ESCRIBO: " << caracter << endl;
 	}
 	delete paraGuardar;
 }
