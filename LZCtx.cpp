@@ -264,8 +264,8 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 			paraAgregarContexto = this->tabla.getContextoActual();
 			paraAgregarCodigo = this->tabla.getLastCode();
 			paraAgregarString = nuevoString;
-			std::string::iterator it= --(nuevoString.end());
-			this->tabla.setContexto(*it);
+			//std::string::iterator it= --(nuevoString.end());
+			this->tabla.setContexto(nuevoString.at(nuevoString.length() - 1));
 			hayUnStringSinTerminar = true;
 		}
 	}
