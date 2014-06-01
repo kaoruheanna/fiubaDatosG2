@@ -37,19 +37,13 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 		charLeido = cadenaLeida->getAsChar();
 		esPrimerCaracter = true;
 		codigoTipoEscritura->bits = CODIGO_LITERAL;
-		this->setCadenaFromChar(codigoGuardado,charLeido);
-		this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
-		this->tabla.setContexto(charLeido);
-		charLeidoAnterior = charLeido;
-		bufferLectura->leer(cadenaLeida);
-		charLeido = cadenaLeida->getAsChar();
 	}
 
 	while ( (!bufferLectura->esFinDeArchivo()) || esPrimerCaracter){
 		cout << "char leido: " << charLeido << endl;
 		string nuevoString = stringLeido+charLeido;
-		if (!(this->tabla.exists(nuevoString) || (nuevoString.length() == 1))){
-			/*bool esUnicoCaracter = (nuevoString.length() == 1);
+		if (!(this->tabla.exists(nuevoString))){
+			bool esUnicoCaracter = (nuevoString.length() == 1);
 			//si tengo un solo caracter
 			if (esUnicoCaracter){
 				codigoTipoEscritura->bits = CODIGO_LITERAL;
@@ -57,35 +51,30 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 				bufferLectura->leer(cadenaLeida);
 				charLeidoAnterior = charLeido;
 				charLeido = cadenaLeida->getAsChar();
-			}*/
+			}
 
 			this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
 
 			//si es el primer caracter no lo guardo
-			/*if (!esPrimerCaracter){
+			if (!esPrimerCaracter){
 				this->tabla.agregarString(nuevoString);
-			}*/
+			}
 			this->tabla.setContexto(charLeidoAnterior);
 			stringLeido = "";
 
 			if (bufferLectura->esFinDeArchivo()){
-				/*if (esUnicoCaracter){
+				if (esUnicoCaracter){
 					codigoTipoEscritura->bits = CODIGO_LITERAL;
 					this->setCadenaFromChar(codigoGuardado,charLeido);
 					this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
-				}*/
+				}
 				cout << "1) el ultimo codigo que imprimo es: " <<codigoGuardado->bits<<endl;
 			}
 
 		} else {
 			cout << "nuevoString: " << nuevoString << endl;
-			if(nuevoString.length() == 1){
-				this->setCadenaFromChar(codigoGuardado,nuevoString.at(0));
-				codigoTipoEscritura->bits = CODIGO_LITERAL;
-			} else {
-				this->tabla.getBits(nuevoString,codigoGuardado);
-				codigoTipoEscritura->bits = CODIGO_CONTEXTO;
-			}
+			this->tabla.getBits(nuevoString,codigoGuardado);
+			codigoTipoEscritura->bits = CODIGO_CONTEXTO;
 			stringLeido = nuevoString;
 			bufferLectura->leer(cadenaLeida);
 			charLeidoAnterior = charLeido;
@@ -197,78 +186,87 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 
 	CadenaDeBits *tipoCodigo = new CadenaDeBits(TAMANIO_TIPO_CODIGO,0);
 	CadenaDeBits *nuevoCodigo = new CadenaDeBits(0,0);
-	bool esPrimerChar = true;
-	bool esLiteral = false;
-	bool anteriorEsLiteral = false;
-	size_t tamanioALeer;
-	char contextoActual;
-	char contextoAnterior;
-	string nuevoString = ""; // String que contiene lo anteriormente descomprimido
-	string descompresion = "";
-	// Leo el primer char y lo pongo como contexto
-	if(!bufferLectura->esFinDeArchivo()){
+	size_t cuantosLeer;
+	string nuevoString;
+	string contextoActual;
+	string stringTerminado;
+	bool hayUnStringSinTerminar = false;
+	bool esUnLiteral;
+	int paraAgregarCodigo = 0;
+	string paraAgregarContexto = "";
+	string paraAgregarString = "";
+
+	/* ANALIZAR EL CASO DE ARCHIVO VACIO */
+
+	//Leo el primer caracter (se que es un char), lo imprimo y seteo el contexto
+	if (!bufferLectura->esFinDeArchivo()){
 		bufferLectura->leer(tipoCodigo);
-		esLiteral = (tipoCodigo->bits == CODIGO_LITERAL);
 		if (tipoCodigo->bits == CODIGO_LITERAL){
-			tamanioALeer = TAMANIO_BYTE;
-			nuevoCodigo->tamanio = tamanioALeer;
+			cuantosLeer = TAMANIO_BYTE;
+			nuevoCodigo->tamanio = cuantosLeer;
 			bufferLectura->leer(nuevoCodigo);
 			nuevoString = this->getStringFromCode(nuevoCodigo->bits);
 			this->imprimirCadena(nuevoString,bufferEscritura);
 			this->tabla.setContexto(nuevoString.at(0));
-			contextoActual = nuevoString.at(0);
-			cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
-			cout << "Leido un char: " << nuevoString << endl;
 		}
-		bufferLectura->leer(tipoCodigo);
 	}
-	while(!bufferLectura->esFinDeArchivo()){
-		if(tipoCodigo->bits == CODIGO_LITERAL){ // Leo un char
-			tamanioALeer = TAMANIO_BYTE;
-			nuevoCodigo->tamanio = tamanioALeer;
-			bufferLectura->leer(nuevoCodigo);
-			descompresion = this->getStringFromCode(nuevoCodigo->bits);
-			cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
-			cout << "Leido un char: " << descompresion << endl;
-		} else { // Leo un codigo de tabla
-			tamanioALeer = this->tabla.getCantidadBitsTabla();
-			int maxValor = (pow(2.0,(int)(tamanioALeer)));
-			if (maxValor <= (this->tabla.getLastCode() + 1)){
-				tamanioALeer++;
-				//cout << "Bits supuestos " << tamanioALeer + 2 << endl;
-			}
-			nuevoCodigo->tamanio = tamanioALeer;
-			bufferLectura->leer(nuevoCodigo);
-			cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
-			cout << "Leido codigo: " << nuevoCodigo->bits << endl;
-			this->tabla.Imprimir(cout);
-			if(this->tabla.exists(*nuevoCodigo)){
-				cout << "String Existia! " << endl;
-				descompresion = this->tabla.getString(*nuevoCodigo);
-			} else {
-				descompresion = this->completarCadena(nuevoString);
-				cout << "String no existia" << endl;
-				cout << "Contexto: " << contextoActual <<" Agrego: " << nuevoString << endl;
-				this->tabla.agregarString(nuevoString);
-			}
-			cout << "Leido un string: " << descompresion << endl;
-		}
-		cout << "Escribo: " << descompresion << endl;
-		this->imprimirCadena(descompresion,bufferEscritura);
-		if(esPrimerChar){ // Caso especial: sin contexto anterior
-			esPrimerChar = false;
-		} else {
-			this->tabla.setContexto(contextoAnterior);
-			cout << "Contexto: " << contextoAnterior <<" Agrego: " << nuevoString + descompresion.at(0) << endl;
-			this->tabla.agregarString(nuevoString + descompresion.at(0));
-		}
-		anteriorEsLiteral = esLiteral;
-		nuevoString = descompresion;
-		descompresion = "";
-		contextoAnterior = contextoActual;
-		contextoActual = nuevoString.at(nuevoString.length() - 1);
-		this->tabla.setContexto(contextoActual);
+
+	//A partir del segundo caracter:
+	while (!bufferLectura->esFinDeArchivo()){
 		bufferLectura->leer(tipoCodigo);
+		if (tipoCodigo->bits == CODIGO_LITERAL){
+			cuantosLeer = TAMANIO_BYTE;
+			esUnLiteral = true;
+		}
+		else {
+			cuantosLeer = this->tabla.getCantidadBitsTabla();
+			int maxValor = (pow(2.0,(int)(cuantosLeer)));
+			if ((hayUnStringSinTerminar) && (maxValor <= (paraAgregarCodigo)+1)  && (this->tabla.getContextoActual() == paraAgregarContexto.at(0))){
+				cuantosLeer++;
+			}
+			cout << "cantidad de bits a leer: " << cuantosLeer << endl;
+			esUnLiteral = false;
+		}
+
+		nuevoCodigo->tamanio = cuantosLeer;
+		bufferLectura->leer(nuevoCodigo);
+
+		if (((int)nuevoCodigo->bits == paraAgregarCodigo) && (this->tabla.getContextoActual() == paraAgregarContexto.at(0))){
+			cout << "Es una cadena que no esta completa" << endl;
+			nuevoString = this->completarCadena(paraAgregarString);
+			this->tabla.setContexto(paraAgregarContexto.at(0));
+			this->tabla.agregarString(nuevoString);
+			this->tabla.setContexto(nuevoString.at(0));
+		}
+		else{
+			if (esUnLiteral){
+				nuevoString = this->getStringFromCode(nuevoCodigo->bits);
+			}
+			else{
+				nuevoString = this->tabla.getString(*nuevoCodigo);
+			}
+			if (hayUnStringSinTerminar){
+				stringTerminado = paraAgregarString + nuevoString.at(0);
+				contextoActual = this->tabla.getContextoActual();
+				this->tabla.setContexto(paraAgregarContexto.at(0));
+				this->tabla.agregarString(stringTerminado);
+				this->tabla.setContexto(contextoActual.at(0));
+				hayUnStringSinTerminar = false;
+			}
+		}
+		if (esUnLiteral){
+			this->tabla.agregarString(nuevoString);
+			this->tabla.setContexto(nuevoString.at(0));
+			this->imprimirCadena(nuevoString,bufferEscritura);
+		}
+		else{
+			this->imprimirCadena(nuevoString,bufferEscritura);
+			paraAgregarContexto = this->tabla.getContextoActual();
+			paraAgregarCodigo = this->tabla.getLastCode();
+			paraAgregarString = nuevoString;
+			this->tabla.setContexto(nuevoString.at(nuevoString.length()-1));
+			hayUnStringSinTerminar = true;
+		}
 	}
 	delete bufferLectura;
 	delete bufferEscritura;

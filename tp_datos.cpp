@@ -106,7 +106,7 @@ int ejecucionModoDebug(bool esCompresion){
 
 int main(int argc, char **argv) {
 	if (MODO_DEBUG){
-		bool esCompresion = true;
+		bool esCompresion = false;
 		return ejecucionModoDebug(esCompresion);
 	} else {
 		return ejecucionPorConsola(argc,argv);
