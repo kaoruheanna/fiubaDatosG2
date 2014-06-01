@@ -62,9 +62,9 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 			this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
 
 			//si es el primer caracter no lo guardo
-			/*if (!esPrimerCaracter){
+			/*if (!esPrimerCaracter){*/
 				this->tabla.agregarString(nuevoString);
-			}*/
+			/*}*/
 			this->tabla.setContexto(charLeidoAnterior);
 			stringLeido = "";
 
@@ -259,8 +259,10 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 			esPrimerChar = false;
 		} else {
 			this->tabla.setContexto(contextoAnterior);
-			cout << "Contexto: " << contextoAnterior <<" Agrego: " << nuevoString + descompresion.at(0) << endl;
-			this->tabla.agregarString(nuevoString + descompresion.at(0));
+			if(!this->tabla.exists(nuevoString + descompresion.at(0))){
+				cout << "Contexto: " << contextoAnterior <<" Agrego: " << nuevoString + descompresion.at(0) << endl;
+				this->tabla.agregarString(nuevoString + descompresion.at(0));
+			}
 		}
 		anteriorEsLiteral = esLiteral;
 		nuevoString = descompresion;
