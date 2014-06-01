@@ -20,6 +20,10 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER, true);
 	BufferEscritura* bufferEscritura = new BufferEscritura(TAMANIO_BUFFER, true);
 	bufferLectura->crearStream(archivoEntrada);
+	if(!bufferLectura->estaAbierto()){
+		return 1;
+	}
+
 	bufferEscritura->crearStream(archivoSalida);
 
 	string stringLeido = "";
@@ -205,6 +209,10 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER, false);
 	BufferEscritura* bufferEscritura = new BufferEscritura(TAMANIO_BUFFER, false);
 	bufferLectura->crearStream(archivoEntrada);
+	if(!bufferLectura->estaAbierto()){
+		//No existe el archivo
+		return 1;
+	}
 	bufferEscritura->crearStream(archivoSalida);
 
 	CadenaDeBits *tipoCodigo = new CadenaDeBits(TAMANIO_TIPO_CODIGO,0);
