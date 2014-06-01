@@ -32,7 +32,10 @@ int ejecucionPorConsola(int argc, char **argv){
 		if(esCompresion) {
 			nombreSalida = nombreEntrada + EXTENSION_ARCHIVO_COMPRIMIDO;
 		} else {
-			string extension = nombreEntrada.substr(nombreEntrada.find_last_of("."));
+			int index = nombreEntrada.find_last_of(".");
+			index = index > 0 ? index : 0;
+			string extension = nombreEntrada.substr(index);
+
 			if(extension == EXTENSION_ARCHIVO_COMPRIMIDO){
 				nombreSalida = nombreEntrada.substr(0, nombreEntrada.find_last_of("."));
 			} else {
@@ -40,6 +43,7 @@ int ejecucionPorConsola(int argc, char **argv){
 				return 0;
 			}
 		}
+
 
 		Compresor *compresor;
 		if (LZ_CONTEXTOS){
@@ -53,10 +57,16 @@ int ejecucionPorConsola(int argc, char **argv){
 		time(&timeStart);
 		if(esCompresion){
 			cout << "Comprimiendo: " << nombreEntrada << " a " << nombreSalida << endl;
-			compresor->comprimir(nombreEntrada,nombreSalida);
+			if(compresor->comprimir(nombreEntrada,nombreSalida) != 0){
+				cout << "No puede comprimirse el archivo" << endl;
+				return 1;
+			}
 		} else {
 			cout << "Desomprimiendo: " << nombreEntrada << " a " << nombreSalida << endl;
-			compresor->descomprimir(nombreEntrada,nombreSalida);
+			if(compresor->descomprimir(nombreEntrada,nombreSalida) != 0){
+				cout << "No puede descomprimirse el archivo" << endl;
+				return 1;
+			}
 		}
 		time(&timeEnd);
 		cout << "Tardo en segundos: " << (timeEnd - timeStart) << endl;

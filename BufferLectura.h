@@ -22,6 +22,7 @@ public:
 	virtual void cerrar();
 
 	virtual void ImprimirEn(ostream& out) const;
+	bool estaAbierto();
 private:
 	ifstream* _file;
 	size_t posFinDeArchivo;

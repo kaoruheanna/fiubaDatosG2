@@ -79,6 +79,11 @@ void BufferLectura::cerrar(){
 	_file->close();
 }
 
+bool BufferLectura::estaAbierto()
+{
+	return _file->is_open();
+}
+
 void BufferLectura::ImprimirEn(ostream& out) const{
 //	out << "Buffer Lectura Tamanio: " << tamanioBuffer << endl;
 }
