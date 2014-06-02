@@ -62,6 +62,10 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 			//si es el primer caracter no lo guardo
 			if (!esPrimerCaracter){
 				this->tabla.agregarString(nuevoString);
+				cout << "   "<< endl;
+				cout << "agrego a la tabla " << nuevoString << endl;
+				cout << "con contexto " << this->tabla.getContextoActual() << endl;
+				cout << "   "<< endl;
 			}
 			this->tabla.setContexto(charLeidoAnterior);
 			stringLeido = "";
@@ -227,6 +231,7 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 		if (tipoCodigo->bits == CODIGO_LITERAL){
 			cuantosLeer = TAMANIO_BYTE;
 			esUnLiteral = true;
+			cout << "Es un literal" << endl;
 		}
 		else {
 			cuantosLeer = this->tabla.getCantidadBitsTabla();
@@ -241,11 +246,15 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 		nuevoCodigo->tamanio = cuantosLeer;
 		bufferLectura->leer(nuevoCodigo);
 
-		if (((int)nuevoCodigo->bits == paraAgregarCodigo) && (this->tabla.getContextoActual() == paraAgregarContexto.at(0))){
+		if ((hayUnStringSinTerminar) && ((int)nuevoCodigo->bits == paraAgregarCodigo) && (this->tabla.getContextoActual() == paraAgregarContexto.at(0))){
 			cout << "Es una cadena que no esta completa" << endl;
 			nuevoString = this->completarCadena(paraAgregarString);
 			this->tabla.setContexto(paraAgregarContexto.at(0));
 			this->tabla.agregarString(nuevoString);
+			cout << "   "<< endl;
+						cout << "agrego a la tabla 1" << nuevoString << endl;
+						cout << "con contexto " << this->tabla.getContextoActual() << endl;
+						cout << "   "<< endl;
 			this->tabla.setContexto(nuevoString.at(0));
 			casoEspecial = true;
 			contextoEspecial = paraAgregarContexto.at(0);
@@ -258,28 +267,41 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 				nuevoString = this->tabla.getString(*nuevoCodigo);
 			}
 			if (hayUnStringSinTerminar){
+				cout << "hay un string sin terminar" << endl;
 				stringTerminado = paraAgregarString + nuevoString.at(0);
 				contextoActual = this->tabla.getContextoActual();
 				this->tabla.setContexto(paraAgregarContexto.at(0));
 				this->tabla.agregarString(stringTerminado);
+				cout << "   "<< endl;
+							cout << "agrego a la tabla 2" << stringTerminado << endl;
+							cout << "con contexto " << this->tabla.getContextoActual() << endl;
+							cout << "   "<< endl;
 				this->tabla.setContexto(contextoActual.at(0));
 				hayUnStringSinTerminar = false;
 			}
 		}
 		if (esUnLiteral){
 			this->tabla.agregarString(nuevoString);
+			cout << "   "<< endl;
+			cout << "agrego a la tabla3 " << nuevoString << endl;
+			cout << "con contexto " << this->tabla.getContextoActual() << endl;
+			cout << "   "<< endl;
 			this->tabla.setContexto(nuevoString.at(0));
 			this->imprimirCadena(nuevoString,bufferEscritura);
+//			hayUnStringSinTerminar = false;
 		}
 		else{
 			this->imprimirCadena(nuevoString,bufferEscritura);
+
 			paraAgregarContexto = this->tabla.getContextoActual();
 			if (casoEspecial){
 				paraAgregarContexto = contextoEspecial;
 			}
 			casoEspecial = false;
+
 			paraAgregarCodigo = this->tabla.getLastCode();
 			paraAgregarString = nuevoString;
+			cout << "la prox dar de alta " << paraAgregarString << " mas algo " << endl;
 			this->tabla.setContexto(nuevoString.at(nuevoString.length()-1));
 			hayUnStringSinTerminar = true;
 		}
@@ -332,8 +354,9 @@ void LZCtx::ImprimirEn(ostream & out) const{
 }
 
 string LZCtx::completarCadena(string cadena){
-	string::iterator textIterator = cadena.begin();
-	cadena = cadena + (*textIterator);
+//	string::iterator textIterator = cadena.begin();
+//	cadena = cadena + (*textIterator);
+	cadena = cadena + (cadena.at(0));
 	return cadena;
 }
 
