@@ -38,8 +38,8 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 		esPrimerCaracter = true;
 		codigoTipoEscritura->bits = CODIGO_LITERAL;
 		this->setCadenaFromChar(codigoGuardado,charLeido);
-		cout << "Bits leidos " << codigoGuardado->tamanio + 1 << endl;
-		cout << "Leido un char: " << charLeido << endl;
+		//cout << "Bits leidos " << codigoGuardado->tamanio + 1 << endl;
+		//cout << "Leido un char: " << charLeido << endl;
 		this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
 		this->tabla.setContexto(charLeido);
 		charLeidoAnterior = charLeido;
@@ -60,7 +60,7 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 				charLeidoAnterior = charLeido;
 				charLeido = cadenaLeida->getAsChar();
 			}*/
-			if(codigoTipoEscritura->bits == CODIGO_LITERAL){
+			/*if(codigoTipoEscritura->bits == CODIGO_LITERAL){
 				cout << "Bits leidos " << codigoGuardado->tamanio + 1 << endl;
 				cout << "Leido un char: " << nuevoString.substr(0, nuevoString.length() - 1) << endl;
 			} else{
@@ -68,14 +68,14 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 				cout << "Bits leidos " << codigoGuardado->tamanio + 1 << endl;
 				cout << "Leido codigo: " << codigoGuardado->bits << endl;
 				cout << "Leido un string: " << nuevoString.substr(0, nuevoString.length() - 1) << endl;
-			}
+			}*/
 			this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
 
 			//si es el primer caracter no lo guardo
 			/*if (!esPrimerCaracter){*/
 				this->tabla.agregarString(nuevoString);
-				cout << "Contexto: " << this->tabla.getContextoActual() <<" Agrego: " << nuevoString << endl;
-				this->tabla.Imprimir(cout);
+				//cout << "Contexto: " << this->tabla.getContextoActual() <<" Agrego: " << nuevoString << endl;
+				//this->tabla.Imprimir(cout);
 				/*}*/
 			this->tabla.setContexto(charLeidoAnterior);
 			stringLeido = "";
@@ -231,8 +231,8 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 			this->imprimirCadena(nuevoString,bufferEscritura);
 			this->tabla.setContexto(nuevoString.at(0));
 			contextoActual = nuevoString.at(0);
-			cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
-			cout << "Leido un char: " << nuevoString << endl;
+			//cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
+			//cout << "Leido un char: " << nuevoString << endl;
 		}
 		bufferLectura->leer(tipoCodigo);
 	}
@@ -242,8 +242,8 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 			nuevoCodigo->tamanio = tamanioALeer;
 			bufferLectura->leer(nuevoCodigo);
 			descompresion = this->getStringFromCode(nuevoCodigo->bits);
-			cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
-			cout << "Leido un char: " << descompresion << endl;
+			//cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
+			//cout << "Leido un char: " << descompresion << endl;
 		} else { // Leo un codigo de tabla
 			tamanioALeer = this->tabla.getCantidadBitsTabla();
 			int maxValor = (pow(2.0,(int)(tamanioALeer)));
@@ -254,20 +254,20 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 			}
 			nuevoCodigo->tamanio = tamanioALeer;
 			bufferLectura->leer(nuevoCodigo);
-			cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
-			cout << "Leido codigo: " << nuevoCodigo->bits << endl;
+			//cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
+			//cout << "Leido codigo: " << nuevoCodigo->bits << endl;
 			//this->tabla.Imprimir(cout);
 			if(this->tabla.exists(*nuevoCodigo)){
 				//cout << "String Existia! " << endl;
 				descompresion = this->tabla.getString(*nuevoCodigo);
-				cout << "Leido un string: " << descompresion << endl;
+				//cout << "Leido un string: " << descompresion << endl;
 			} else {
 				descompresion = this->completarCadena(nuevoString);
-				cout << "Leido un string: " << descompresion << " desde el string " << nuevoString << endl;
+				//cout << "Leido un string: " << descompresion << " desde el string " << nuevoString << endl;
 				//cout << "String no existia" << endl;
-				cout << "Contexto: " << contextoActual <<" Agrego: " << descompresion << endl;
+				//cout << "Contexto: " << contextoActual <<" Agrego: " << descompresion << endl;
 				this->tabla.agregarString(descompresion);
-				this->tabla.Imprimir(cout);
+				//this->tabla.Imprimir(cout);
 				casoEspecial = true;
 			}
 			//cout << "Leido un string: " << descompresion << endl;
@@ -279,9 +279,9 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 		} else {
 			if(!casoEspecial){
 				this->tabla.setContexto(contextoAnterior);
-				cout << "Contexto: " << contextoAnterior <<" Agrego: " << nuevoString + descompresion.at(0) << endl;
+				//cout << "Contexto: " << contextoAnterior <<" Agrego: " << nuevoString + descompresion.at(0) << endl;
 				this->tabla.agregarString(nuevoString + descompresion.at(0));
-				this->tabla.Imprimir(cout);
+				//this->tabla.Imprimir(cout);
 			}
 			casoEspecial = false;
 		}
