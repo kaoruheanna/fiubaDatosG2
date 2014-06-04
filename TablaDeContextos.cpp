@@ -39,9 +39,6 @@ bool TablaDeContextos::exists(string cadena){
 	return tabla->exists(cadena);
 }
 
-/**
- * to do
- */
 bool TablaDeContextos::exists(CadenaDeBits bits){
 	if (!this->tengoContexto()){
 		cout << "quiero agregar y no tengo contexto" << endl;
@@ -92,18 +89,12 @@ string TablaDeContextos::getString(CadenaDeBits bits){
 	return toReturn;
 }
 
-/**
- * to do
- */
 void TablaDeContextos::limpiar(){
-
+	this->getTablaActual()->limpiar();
 }
 
-/**
- * to do
- */
 bool TablaDeContextos::hayQueLimpiar(){
-	return false;
+	return this->getTablaActual()->hayQueLimpiar();
 }
 
 size_t TablaDeContextos::getCantidadBitsTabla(){
@@ -121,5 +112,10 @@ char TablaDeContextos::getContextoActual(){
 void TablaDeContextos::Imprimir(ostream& out){
 	this->getTablaActual()->Imprimir(out);
 }
-
+bool TablaDeContextos::esCodigoLimpieza(CadenaDeBits *cadena){
+	return this->getTablaActual()->esCodigoLimpieza(cadena);
+}
+void TablaDeContextos::obtenerCodigoLimpieza(CadenaDeBits *cadena){
+	this->getTablaActual()->esCodigoLimpieza(cadena);
+}
 

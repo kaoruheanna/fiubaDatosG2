@@ -28,6 +28,8 @@ public:
 	int getLastCode();
 	char getContextoActual();
 	void Imprimir(ostream& out);
+	bool esCodigoLimpieza(CadenaDeBits *cadena);
+	void obtenerCodigoLimpieza(CadenaDeBits *cadena);
 
 private:
 	map<char,Tabla*> mapaDeContextos;
