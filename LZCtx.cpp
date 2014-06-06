@@ -65,17 +65,29 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 				cout << "Leido un string: " << nuevoString.substr(0, nuevoString.length() - 1) << endl;
 			}*/
 			this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
-
+			bool limpiarTabla = false;
 			this->tabla.agregarString(nuevoString);
-			this->tabla.setContexto(charLeidoAnterior);
-			if(this->tabla.hayQueLimpiar()){
+			if(this->tabla.hayQueLimpiar() && (this->tabla.getContextoActual() != charLeidoAnterior)){
+				this->tabla.limpiar();
+				limpiarTabla = true;
+				//cout << "Contexto: " << this->tabla.getContextoActual() << " Tabla limpiada." << endl;
+			} else {
+				//cout << "Contexto: " << this->tabla.getContextoActual() <<" Agrego: " << nuevoString << endl;
+				//this->tabla.Imprimir(cout);
+			}
+			if(limpiarTabla || (this->tabla.hayQueLimpiar() && (this->tabla.getContextoActual() == charLeidoAnterior))){
+				this->tabla.setContexto(charLeidoAnterior);
 				this->tabla.obtenerCodigoLimpieza(codigoGuardado);
 				//cout << "Nuevo string sin terminar " << charLeido << endl;
 				//cout << "Codigo de limpieza de " << codigoGuardado->tamanio << " bits" << endl;
 				codigoTipoEscritura->bits = CODIGO_CONTEXTO;
-				this->imprimirCodigo(codigoTipoEscritura, codigoTipoEscritura,bufferEscritura);
-				this->tabla.limpiar();
+				this->imprimirCodigo(codigoTipoEscritura, codigoGuardado,bufferEscritura);
+				if(!limpiarTabla){
+					this->tabla.limpiar();
+				}
+				limpiarTabla = false;
 			}
+			this->tabla.setContexto(charLeidoAnterior);
 			stringLeido = "";
 
 		} else {
@@ -114,81 +126,6 @@ int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
 	return 0;
 
 }
-
-//int LZCtx::comprimir(string archivoEntrada, string archivoSalida){
-//	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER, true);
-//	BufferEscritura* bufferEscritura = new BufferEscritura(TAMANIO_BUFFER, true);
-//	bufferLectura->crearStream(archivoEntrada);
-//	bufferEscritura->crearStream(archivoSalida);
-//
-//	string stringLeido = "";
-//	string charLeido = "";
-//	string charLeidoAnterior = "";
-//	bool esPrimerCaracter = false;
-//	CadenaDeBits *codigoGuardado = new CadenaDeBits();
-//	CadenaDeBits *codigoTipoEscritura = new CadenaDeBits();
-//	codigoTipoEscritura->tamanio = TAMANIO_TIPO_CODIGO;
-//	CadenaDeBits *cadenaLeida = new CadenaDeBits();
-////	bool faltaImprimir = false;
-//
-//	if (!bufferLectura->esFinDeArchivo()){
-//		bufferLectura->leer(cadenaLeida);
-////		faltaImprimir = true;
-//		charLeido = cadenaLeida->getAsChar();
-////		esPrimerCaracter = true;
-//		codigoTipoEscritura->bits = CODIGO_LITERAL;
-//		this->setCadenaFromChar(codigoGuardado,charLeido.at(0));
-//		cout << "imprimo el primer caracter que viene" << endl;
-//		this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
-//		this->tabla.setContexto(charLeido.at(0));
-//	}
-//
-//	while (!bufferLectura->esFinDeArchivo()){
-////		charLeidoAnterior = charLeido;
-//		bufferLectura->leer(cadenaLeida);
-//		charLeido = cadenaLeida->getAsChar();
-//		cout << "lei el caracter: '"<<charLeido<<"'"<<endl;
-//		string nuevoString = stringLeido+charLeido;
-//
-//		cout<<"busco nuevoString: '"<<nuevoString<<"'";
-//		cout<<" en contexto: '"<<this->tabla.getContextoActual()<<"'"<<endl;
-//
-//		if (!(this->tabla.exists(nuevoString))){
-//
-//			//si no lo encuentro en la tabla tengo que imprimir
-//			bool esUnSoloCaracter = (nuevoString.length() == 1);
-//
-//			if (esUnSoloCaracter){
-//				//si tengo un solo caracter y no lo encontre en la tabla uso el codigo del literal
-//				codigoTipoEscritura->bits = CODIGO_LITERAL;
-//				this->setCadenaFromChar(codigoGuardado,charLeido.at(0));
-//			}
-//
-//			this->imprimirCodigo(codigoTipoEscritura,codigoGuardado,bufferEscritura);
-//			stringLeido = "";
-//			this->tabla.agregarString(nuevoString);
-//			cout<<"Agrego '"<<nuevoString <<"' en el contexto '"<<this->tabla.getContextoActual()<<"'"<<endl;
-//			this->tabla.setContexto(charLeido.at(0));
-//			cout<<"seteo el nuevo contexto:'"<<charLeido.at(0)<<"'"<<endl;
-//
-//
-//		} else {
-//
-//			//si lo encuentro en la tabla guardo el codigo.
-//			this->tabla.getBits(nuevoString,codigoGuardado);
-//			codigoTipoEscritura->bits = CODIGO_CONTEXTO;
-//			//y me guardo el string que llevo leido hasta el momento
-//			stringLeido = nuevoString;
-//		}
-//	}
-//
-//	delete codigoGuardado;
-//	delete bufferLectura;
-//	delete bufferEscritura;
-//	delete cadenaLeida;
-//	return 0;
-//
-//}
 
 int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 	BufferLectura* bufferLectura = new BufferLectura(TAMANIO_BUFFER, false);
@@ -252,7 +189,16 @@ int LZCtx::descomprimir(string archivoEntrada, string archivoSalida){
 			esCodigoLimpieza = this->tabla.esCodigoLimpieza(nuevoCodigo);
 			//cout << "Bits leidos " << nuevoCodigo->tamanio + 1 << endl;
 			//cout << "Leido codigo: " << nuevoCodigo->bits << endl;
-			if(!esCodigoLimpieza){
+			if(esCodigoLimpieza){
+				this->tabla.setContexto(contextoAnterior);
+				this->tabla.limpiar();
+				//cout << "Contexto: " << this->tabla.getContextoActual() << " Tabla limpiada." << endl;
+				this->tabla.setContexto(contextoActual);
+				//cout << "Codigo de limpieza de " << nuevoCodigo->tamanio << " bits" << endl;
+				casoEspecial = true;
+				//casoEspecial = ((tamanioALeer == this->tabla.getCantidadBitsTabla()) || (contextoActual != contextoAnterior));
+				nuevoString = nuevoString.substr(nuevoString.size() - 1);
+			} else {
 				//this->tabla.Imprimir(cout);
 				if(this->tabla.exists(*nuevoCodigo)){
 					//cout << "String Existia! " << endl;

@@ -116,6 +116,6 @@ bool TablaDeContextos::esCodigoLimpieza(CadenaDeBits *cadena){
 	return this->getTablaActual()->esCodigoLimpieza(cadena);
 }
 void TablaDeContextos::obtenerCodigoLimpieza(CadenaDeBits *cadena){
-	this->getTablaActual()->esCodigoLimpieza(cadena);
+	this->getTablaActual()->obtenerCodigoLimpieza(cadena);
 }
 
