@@ -67,7 +67,6 @@ void TablaDeContextos::getBits(string cadena,CadenaDeBits* cadenaDeBits){
 }
 
 bool TablaDeContextos::tengoContexto(){
-//	return (this->contexto != NULL);
 	return this->contextoSeteado;
 }
 

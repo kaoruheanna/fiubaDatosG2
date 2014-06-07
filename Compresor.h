@@ -19,9 +19,6 @@ class Compresor : public Imprimible{
 		virtual ~Compresor(){}
         virtual int comprimir(string archivoEntrada, string archivoSalida) = 0;
         virtual int descomprimir(string archivoEntrada, string archivoSalida) = 0;
-
-    protected:
-        //virtual bool agregarCadenaATabla(string cadena) = 0;
 };
 
 #endif /* COMPRESOR_H_ */

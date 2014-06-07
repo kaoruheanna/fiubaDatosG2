@@ -1,11 +1,3 @@
-//============================================================================
-// Name        : hello_world.cpp
-// Author      : 
-// Version     :
-// Copyright   : Your copyright notice
-// Description : Hello World in C++, Ansi-style
-//============================================================================
-
 #include <iostream>
 #include <stdio.h>
 #include "LZ78.h"
@@ -62,7 +54,7 @@ int ejecucionPorConsola(int argc, char **argv){
 				return 1;
 			}
 		} else {
-			cout << "Desomprimiendo: " << nombreEntrada << " a " << nombreSalida << endl;
+			cout << "Descomprimiendo: " << nombreEntrada << " a " << nombreSalida << endl;
 			if(compresor->descomprimir(nombreEntrada,nombreSalida) != 0){
 				cout << "No puede descomprimirse el archivo" << endl;
 				return 1;
@@ -104,7 +96,7 @@ int ejecucionModoDebug(bool esCompresion){
 		cout << "Comprimiendo: " << nombreEntrada << " a " << nombreSalida << endl;
 		compresor->comprimir(nombreEntrada,nombreSalida);
 	} else {
-		cout << "Desomprimiendo: " << nombreEntrada << " a " << nombreSalida << endl;
+		cout << "Descomprimiendo: " << nombreEntrada << " a " << nombreSalida << endl;
 		compresor->descomprimir(nombreEntrada,nombreSalida);
 	}
 	time(&timeEnd);

@@ -29,27 +29,11 @@ CadenaDeBits Tabla::agregarString(string cadena){
 	int maxValor = (pow(2.0,(int)(this->cantidadBitsTabla)));
 	if(this->lastCode >= maxValor){
 		this->cantidadBitsTabla++;
-		//cout << "Aumentado el codigo: " << cantidadBitsTabla << endl;
 	}
 	return toReturn;
 }
-//CadenaDeBits Tabla::getBits(string cadena){
-//	bool encontrado = false;
-//	unsigned int currentIndex = 0;
-//	while((!encontrado) && (currentIndex < this->tabla->size())){
-//		encontrado = (cadena.compare(this->tabla->at(currentIndex)) == 0);
-//		currentIndex ++;
-//	}
-//	return (*new CadenaDeBits(this->bitsTabla, currentIndex - 1));
-//}
 
 void Tabla::getBits(string cadena,CadenaDeBits* cadenaDeBits){
-//	bool encontrado = false;
-	/**unsigned int currentIndex = 0;
-	while((!encontrado) && (currentIndex < this->tabla->size())){
-		encontrado = (cadena.compare(this->tabla->at(currentIndex)) == 0);
-		currentIndex ++;
-	} */
 	cadenaDeBits->tamanio = this->cantidadBitsTabla;
 	cadenaDeBits->bits = this->mapa->at(cadena) + 1;
 }
@@ -67,14 +51,7 @@ int Tabla::getLastCode(){
 }
 
 bool Tabla::exists(string cadena){
-	//bool encontrado = false;
 	return (this->mapa->find(cadena) != this->mapa->end());
-	/*unsigned int currentIndex = 0;
-	while((!encontrado) && (currentIndex < this->tabla->size())){
-		encontrado = (cadena.compare(this->tabla->at(currentIndex)) == 0);
-		currentIndex ++;
-	}
-	return encontrado;*/
 }
 
 bool Tabla::exists(CadenaDeBits bits){

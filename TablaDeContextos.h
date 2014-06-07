@@ -38,9 +38,6 @@ private:
 
 	bool tengoContexto();
 	Tabla* getTablaActual();
-
-//	string getChar(CadenaDeBits bits);
-
 };
 
 
